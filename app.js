@@ -1,28 +1,29 @@
-// ইউজার ক্রেডেনশিয়ালস (সঠিক সিকিউরিটি)
+// ইউজার ক্রেডেনশিয়ালস (পাসওয়ার্ড: gando)
 const USERS = [
     { email: "minhaj@gmail.com", pass: "gando" },
     { email: "nadiya@gmail.com", pass: "gando" }
 ];
 
-// লগইন ভ্যালিডেশন সিস্টেম
+// লগইন চেক ফাংশন
 function handleLogin() {
     const emailInput = document.getElementById('email').value.trim().toLowerCase();
     const passInput = document.getElementById('password').value.trim();
     const errorMsg = document.getElementById('login-error');
 
+    // চেক করা হচ্ছে ইমেইল ও পাসওয়ার্ড সঠিক কি না
     const isValidUser = USERS.some(user => user.email === emailInput && user.pass === passInput);
 
     if (isValidUser) {
         errorMsg.style.display = 'none';
-        document.getElementById('login-modal').classList.add('hidden');
-        document.getElementById('dashboard').classList.remove('hidden');
+        document.getElementById('login-modal').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
         document.body.classList.remove('login-mode');
         
         renderTable();
         initTheme();
         initLanguage();
     } else {
-        errorMsg.innerText = "ভুল ইমেইল অথবা পাসওয়ার্ড দিয়েছেন!";
+        errorMsg.innerText = "ভুল ইমেইল অথবা পাসওয়ার্ড!";
         errorMsg.style.display = 'block';
     }
 }
@@ -30,8 +31,8 @@ function handleLogin() {
 function handleLogout() {
     document.getElementById('email').value = '';
     document.getElementById('password').value = '';
-    document.getElementById('login-modal').classList.remove('hidden');
-    document.getElementById('dashboard').classList.add('hidden');
+    document.getElementById('login-modal').style.display = 'flex';
+    document.getElementById('dashboard').style.display = 'none';
     document.body.classList.add('login-mode');
 }
 
@@ -381,9 +382,3 @@ function getSmartAIReply(query) {
     ];
     return randomReplies[Math.floor(Math.random() * randomReplies.length)];
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-    renderTable();
-    initTheme();
-    initLanguage();
-});
