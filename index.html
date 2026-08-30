@@ -34,7 +34,6 @@
 
     <!-- Dashboard Main View -->
     <div id="dashboard" class="dashboard-container hidden">
-        <!-- Top Navigation Bar -->
         <header class="top-nav">
             <div class="brand">
                 <i class="fa-solid fa-kaaba"></i>
@@ -66,31 +65,30 @@
             </div>
         </header>
 
-        <!-- Hero Profiles & Banner -->
         <section class="hero-section">
             <div class="profile-card">
-                <img src="minhaj.jpg" alt="Minhaj" class="avatar">
-                <h3>মিনহাজ</h3>
+                <img src="minhaj.jpg" alt="MINHAJ" class="avatar">
+                <h3>MINHAJ</h3>
             </div>
             
             <div class="banner-center">
-                <h2>সালাত ট্র্যাকার প্যানেল</h2>
+                <h2>PRAYER IS THE PILLAR OF RELIGION</h2>
+                <p>নামাজ দ্বীনের খুটি | নামাজ অভ্যাস গড়ুন</p>
             </div>
 
             <div class="profile-card">
-                <img src="nadiya.jpg" alt="Nadiya" class="avatar">
-                <h3>নাদিয়া</h3>
+                <img src="nadiya.jpg" alt="NADIYA" class="avatar">
+                <h3>NADIYA</h3>
             </div>
         </section>
 
-        <!-- Main Tracking Table -->
         <section class="table-card">
             <div class="table-header-legend">
                 <div class="legend-items">
-                    <span class="legend green">● আদায় (১০০%)</span>
-                    <span class="legend yellow">● কাজা (৫০%)</span>
-                    <span class="legend gray">● ওজর (১০০%)</span>
-                    <span class="legend red">● পড়েননি (০%)</span>
+                    <span class="legend green">✔ সম্পূর্ণ</span>
+                    <span class="legend yellow">◐ আংশিক</span>
+                    <span class="legend gray">◯ বাকি</span>
+                    <span class="legend red">✖ মিস</span>
                 </div>
                 <button class="btn-filter"><i class="fa-solid fa-filter"></i> ফিল্টার</button>
             </div>
@@ -99,9 +97,10 @@
                 <table>
                     <thead>
                         <tr>
-                            <th rowspan="2">তারিখ</th>
-                            <th colspan="5">মিনহাজ</th>
-                            <th colspan="5">নাদিয়া</th>
+                            <th rowspan="2">দিন</th>
+                            <th colspan="5">MINHAJ'S PRAYER LOG</th>
+                            <th colspan="5">NADIYA'S PRAYER LOG</th>
+                            <th rowspan="2">দিনের অবস্থা</th>
                         </tr>
                         <tr class="user-th">
                             <th>ফজর</th><th>জোহর</th><th>আসর</th><th>মাগরিব</th><th>ইশা</th>
@@ -109,56 +108,53 @@
                         </tr>
                     </thead>
                     <tbody id="tracker-table-body">
-                        <!-- JS Rows loaded here -->
                     </tbody>
                 </table>
             </div>
             
             <div class="see-all-container">
-                <button class="btn-see-all">সবগুলো দেখুন ↓</button>
+                <button class="btn-see-all">সব দিন দেখুন ↓</button>
             </div>
         </section>
 
-        <!-- Analytics Section -->
         <section class="analytics-section">
             <div class="stat-card">
-                <span class="badge-mini">মিনহাজ</span>
+                <span class="badge-mini">MINHAJ'S PRAYER LOG</span>
                 <div class="stat-body">
-                    <div class="circle-progress" style="--percent: 85;">
+                    <div class="circle-progress" style="--percent: 0;">
                         <div class="percent-val">
-                            <span>৮৫%</span>
+                            <span>0%</span>
+                            <small>সম্পূর্ণ</small>
                         </div>
                     </div>
                     <ul class="stat-list">
-                        <li>আদায়: ৮৫%</li>
-                        <li>কাজা: ১০%</li>
-                        <li>পড়েননি: ৫%</li>
+                        <li>COMPLETE: 0 DAYS</li>
+                        <li>সম্পূর্ণ ওয়াক্ত: 0/150</li>
                     </ul>
                 </div>
             </div>
 
             <div class="stat-card">
-                <span class="badge-mini nadiya-bg">নাদিয়া</span>
+                <span class="badge-mini nadiya-bg">NADIYA'S PRAYER LOG</span>
                 <div class="stat-body">
-                    <div class="circle-progress" style="--percent: 90;">
+                    <div class="circle-progress" style="--percent: 0;">
                         <div class="percent-val">
-                            <span>৯০%</span>
+                            <span>0%</span>
+                            <small>সম্পূর্ণ</small>
                         </div>
                     </div>
                     <ul class="stat-list">
-                        <li>আদায়: ৯০%</li>
-                        <li>কাজা: ৫%</li>
-                        <li>ওজর: ৫%</li>
+                        <li>COMPLETE: 0 DAYS</li>
+                        <li>সম্পূর্ণ ওয়াক্ত: 0/150</li>
                     </ul>
                 </div>
             </div>
         </section>
 
-        <!-- Bottom Bar -->
         <footer class="bottom-bar">
             <div class="quote-box">
                 <i class="fa-solid fa-trophy trophy-icon"></i>
-                <span>"নিশ্চয়ই সময়মতো সালাত আদায় করা মুমিনদের জন্য আবশ্যকীয় কর্তব্য।"</span>
+                <span>"Love motivational quotes and motivational options in daily life with emotional achievement." - Nadiya!</span>
             </div>
             <button class="btn-share"><i class="fa-solid fa-share-nodes"></i> শেয়ার করুন</button>
         </footer>
@@ -167,22 +163,11 @@
     <script src="app.js"></script>
     <script>
         function handleLogin() {
-            const email = document.getElementById('email').value.trim();
-            const pass = document.getElementById('password').value.trim();
-            
-            // Check credentials from app.js standard or default login
-            if (typeof allowedUsers !== 'undefined' && allowedUsers[email] && allowedUsers[email] === pass) {
-                document.getElementById('login-modal').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-                document.body.classList.remove('login-mode');
-                if (typeof generateTableRows === 'function') generateTableRows();
-            } else {
-                // Fallback login bypass if user types direct credentials
-                document.getElementById('login-modal').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-                document.body.classList.remove('login-mode');
-                if (typeof generateTableRows === 'function') generateTableRows();
-            }
+            document.getElementById('login-modal').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            document.body.classList.remove('login-mode');
+            if (typeof renderTable === 'function') renderTable();
+            else if (typeof generateTableRows === 'function') generateTableRows();
         }
 
         function handleLogout() {
@@ -190,6 +175,11 @@
             document.getElementById('dashboard').classList.add('hidden');
             document.body.classList.add('login-mode');
         }
+
+        window.onload = function() {
+            if (typeof renderTable === 'function') renderTable();
+            else if (typeof generateTableRows === 'function') generateTableRows();
+        };
     </script>
 </body>
 </html>
