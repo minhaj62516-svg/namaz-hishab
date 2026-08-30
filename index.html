@@ -9,7 +9,7 @@
 </head>
 <body class="light-mode">
 
-    <!-- Login Modal Screen -->
+    <!-- Login Modal -->
     <div id="login-modal" class="modal-overlay">
         <div class="login-card">
             <div class="login-banner">
@@ -44,9 +44,9 @@
         </div>
     </div>
 
-    <!-- Main Dashboard Screen -->
+    <!-- Dashboard Main -->
     <div id="dashboard" class="dashboard-container hidden">
-        <!-- Top Nav Bar -->
+        <!-- Header Controls -->
         <header class="top-nav">
             <div class="brand">
                 <i class="fa-solid fa-kaaba logo-icon"></i>
@@ -69,8 +69,8 @@
                 <div class="theme-switch">
                     <span class="mode-label">LIGHT/DARK MODE</span>
                     <div class="toggle-btn-group">
-                        <button id="btn-light" class="active" onclick="setTheme('light')">LIGHT</button>
-                        <button id="btn-dark" onclick="setTheme('dark')">DARK</button>
+                        <button class="active" onclick="setTheme('light')">LIGHT</button>
+                        <button onclick="setTheme('dark')">DARK</button>
                     </div>
                 </div>
                 <div class="lang-switch">
@@ -105,7 +105,7 @@
         <section class="table-card">
             <div class="table-header-legend">
                 <div class="legend-items">
-                    <span class="legend green"><i class="fa-regular fa-circle-check"></i> সম্পূর্ণ</span>
+                    <span class="legend Green"><i class="fa-regular fa-circle-check"></i> সম্পূর্ণ</span>
                     <span class="legend yellow"><i class="fa-regular fa-circle"></i> আংশিক</span>
                     <span class="legend gray"><i class="fa-regular fa-circle"></i> বাকি</span>
                     <span class="legend red"><i class="fa-regular fa-circle-xmark"></i> মিস</span>
@@ -113,13 +113,13 @@
                 <button class="btn-filter"><i class="fa-solid fa-sliders"></i> ফিল্টার</button>
             </div>
 
-            <div class="table-wrapper">
+            <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
-                            <th rowspan="2" class="sticky-col">দিন</th>
-                            <th colspan="5" class="user-th th-minhaj">MINHAJ'S PRAYER LOG</th>
-                            <th colspan="5" class="user-th th-nadiya">NADIYA'S PRAYER LOG</th>
+                            <th rowspan="2">দিন</th>
+                            <th colspan="5" class="user-th"><img src="https://ui-avatars.com/api/?name=Minhaj" class="mini-avatar"> MINHAJ'S PRAYER LOG</th>
+                            <th colspan="5" class="user-th"><img src="https://ui-avatars.com/api/?name=Nadiya" class="mini-avatar"> NADIYA'S PRAYER LOG</th>
                             <th rowspan="2">দিনের অবস্থা</th>
                         </tr>
                         <tr>
@@ -128,7 +128,7 @@
                         </tr>
                     </thead>
                     <tbody id="prayer-table-body">
-                        <!-- JS Dynamic 30 Days -->
+                        <!-- JS generated 30 days rows -->
                     </tbody>
                 </table>
             </div>
@@ -137,12 +137,12 @@
             </div>
         </section>
 
-        <!-- Analytics Section -->
+        <!-- Analytics / Summary Cards -->
         <section class="analytics-section">
             <div class="stat-card">
                 <h4><span class="badge-mini">M</span> MINHAJ'S PRAYER LOG</h4>
                 <div class="stat-body">
-                    <div class="circle-progress green-progress">
+                    <div class="circle-progress" style="--percent: 67;">
                         <span class="percent-val">67%<br><small>সম্পূর্ণ</small></span>
                     </div>
                     <ul class="stat-list">
@@ -157,7 +157,7 @@
             <div class="stat-card">
                 <h4><span class="badge-mini nadiya-bg">N</span> NADIYA'S PRAYER LOG</h4>
                 <div class="stat-body">
-                    <div class="circle-progress pink-progress">
+                    <div class="circle-progress" style="--percent: 40;">
                         <span class="percent-val">40%<br><small>সম্পূর্ণ</small></span>
                     </div>
                     <ul class="stat-list">
@@ -170,7 +170,7 @@
             </div>
         </section>
 
-        <!-- Footer Bar -->
+        <!-- Bottom Quote & AI Widget -->
         <footer class="bottom-bar">
             <div class="quote-box">
                 <i class="fa-solid fa-trophy trophy-icon"></i>
@@ -205,12 +205,8 @@
         function setTheme(mode) {
             if(mode === 'dark') {
                 document.body.classList.add('dark-mode');
-                document.getElementById('btn-dark').classList.add('active');
-                document.getElementById('btn-light').classList.remove('active');
             } else {
                 document.body.classList.remove('dark-mode');
-                document.getElementById('btn-light').classList.add('active');
-                document.getElementById('btn-dark').classList.remove('active');
             }
         }
 
@@ -218,20 +214,11 @@
             const tbody = document.getElementById('prayer-table-body');
             tbody.innerHTML = '';
             
-            const statuses = [
-                { text: 'চমৎকার 🔥', class: 'status-super' },
-                { text: 'ভালো 😬', class: 'status-good' },
-                { text: 'ভালো 😬', class: 'status-good' },
-                { text: 'চমৎকার 🔥', class: 'status-super' },
-                { text: 'মোটামুটি 😬', class: 'status-mid' },
-                { text: 'চেষ্টা চালিয়ে যাও 💪', class: 'status-keep' },
-                { text: 'বাকি', class: 'status-pending' }
-            ];
+            const statuses = ['চমৎকার 🔥', 'ভালো 😬', 'ভালো 😬', 'চমৎকার 🔥', 'মোটামুটি 😬', 'চেষ্টা চালিয়ে যাও 💪', 'বাকি'];
 
             for (let i = 1; i <= 7; i++) {
-                const st = statuses[i-1] || { text: 'বাকি', class: 'status-pending' };
                 let row = `<tr>
-                    <td class="sticky-col"><strong>${i}/30</strong></td>
+                    <td><strong>${i}/30</strong></td>
                     <td><i class="fa-regular fa-circle-check status-icon green"></i></td>
                     <td><i class="fa-regular fa-circle-check status-icon green"></i></td>
                     <td><i class="fa-regular fa-circle-check status-icon green"></i></td>
@@ -242,11 +229,11 @@
                     <td><i class="fa-regular fa-circle-check status-icon green"></i></td>
                     <td><i class="fa-regular fa-circle-check status-icon green"></i></td>
                     <td><i class="fa-regular fa-circle-check status-icon green"></i></td>
-                    <td><span class="status-badge ${st.class}">${st.text}</span></td>
+                    <td><span class="status-badge">${statuses[i-1] || 'বাকি'}</span></td>
                 </tr>`;
                 tbody.innerHTML += row;
             }
         }
     </script>
 </body>
-</html>
+                                </html>
