@@ -22,7 +22,7 @@ function renderTable() {
     }
     
     tbody.innerHTML = html;
-    updateAnalytics(); // পার্সেন্টেজ ও পরিসংখ্যান হিসাব করা
+    updateAnalytics(); // পার্সেন্টেজ হিসাব
 }
 
 // টিক চিহ্ন সেভ করার ফাংশন
@@ -37,16 +37,15 @@ function saveCheckboxState(checkbox) {
     }
     
     localStorage.setItem('namaz_tracker_data', JSON.stringify(savedData));
-    updateAnalytics(); // টিক দেওয়ার সাথে সাথেই পার্সেন্টেজ আপডেট হবে
+    updateAnalytics();
 }
 
-// নিচের পার্সেন্টেজ ও ওয়াক্ত অটো-ক্যালকুলেট করার ফাংশন
+// পার্সেন্টেজ ও ওয়াক্ত অটো-ক্যালকুলেট করার ফাংশন
 function updateAnalytics() {
     const savedData = JSON.parse(localStorage.getItem('namaz_tracker_data')) || {};
     
     let minhajWaqtCount = 0;
     let nadiyaWaqtCount = 0;
-    
     let minhajFullDays = 0;
     let nadiyaFullDays = 0;
 
@@ -73,14 +72,11 @@ function updateAnalytics() {
         if (nDayCount === 5) nadiyaFullDays++;
     }
 
-    // পার্সেন্টেজ হিসাব (মোট ওয়াক্ত ১৫০ টি)
     const minhajPercent = Math.round((minhajWaqtCount / 150) * 100);
     const nadiyaPercent = Math.round((nadiyaWaqtCount / 150) * 100);
 
-    // অ্যানালিটিক্স সেকশনের DOM আপডেট
     const cards = document.querySelectorAll('.stat-card');
     if (cards.length >= 2) {
-        // মিনহাজের কার্ড
         cards[0].querySelector('.circle-progress').style.setProperty('--percent', minhajPercent);
         cards[0].querySelector('.percent-val span').innerText = `${minhajPercent}%`;
         cards[0].querySelector('.stat-list').innerHTML = `
@@ -88,7 +84,6 @@ function updateAnalytics() {
             <li>সম্পূর্ণ ওয়াক্ত: ${minhajWaqtCount}/150</li>
         `;
 
-        // নাদিয়ার কার্ড
         cards[1].querySelector('.circle-progress').style.setProperty('--percent', nadiyaPercent);
         cards[1].querySelector('.percent-val span').innerText = `${nadiyaPercent}%`;
         cards[1].querySelector('.stat-list').innerHTML = `
@@ -98,42 +93,30 @@ function updateAnalytics() {
     }
 }
 
-// পেজ লোড হলেই রান হবে
-document.addEventListener("DOMContentLoaded", renderTable);
-// Theme Toggle Functionality
-function setupThemeToggle() {
-    const themeButtons = document.querySelectorAll('.theme-switch .toggle-btn-group button');
-    const savedTheme = localStorage.getItem('namaz_theme') || 'light';
+// Theme Switcher Functions
+function setTheme(mode) {
+    const btnLight = document.getElementById('btn-theme-light');
+    const btnDark = document.getElementById('btn-theme-dark');
 
-    if (savedTheme === 'dark') {
+    if (mode === 'dark') {
         document.body.classList.add('dark-mode');
-        if (themeButtons.length >= 2) {
-            themeButtons[0].classList.remove('active');
-            themeButtons[1].classList.add('active');
-        }
-    }
-
-    if (themeButtons.length >= 2) {
-        // Light Button Click
-        themeButtons[0].addEventListener('click', () => {
-            document.body.classList.remove('dark-mode');
-            themeButtons[0].classList.add('active');
-            themeButtons[1].classList.remove('active');
-            localStorage.setItem('namaz_theme', 'light');
-        });
-
-        // Dark Button Click
-        themeButtons[1].addEventListener('click', () => {
-            document.body.classList.add('dark-mode');
-            themeButtons[1].classList.add('active');
-            themeButtons[0].classList.remove('active');
-            localStorage.setItem('namaz_theme', 'dark');
-        });
+        if (btnLight) btnLight.classList.remove('active');
+        if (btnDark) btnDark.classList.add('active');
+        localStorage.setItem('namaz_theme', 'dark');
+    } else {
+        document.body.classList.remove('dark-mode');
+        if (btnLight) btnLight.classList.add('active');
+        if (btnDark) btnDark.classList.remove('active');
+        localStorage.setItem('namaz_theme', 'light');
     }
 }
 
-// Ensure theme initialization on page load
-document.addEventListener("DOMContentLoaded", () => {
-    setupThemeToggle();
-});
+function initTheme() {
+    const savedTheme = localStorage.getItem('namaz_theme') || 'light';
+    setTheme(savedTheme);
+}
 
+document.addEventListener("DOMContentLoaded", () => {
+    renderTable();
+    initTheme();
+});
