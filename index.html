@@ -17,23 +17,24 @@
                 <div class="input-group">
                     <div class="input-box">
                         <i class="fa-regular fa-user"></i>
-                        <input type="text" id="email" placeholder="মোবাইল নম্বর বা ইমেইল">
+                        <input type="text" id="email" placeholder="ইমেইল (nadiya@gmail.com)">
                     </div>
                 </div>
                 <div class="input-group">
                     <div class="input-box">
                         <i class="fa-solid fa-lock"></i>
-                        <input type="password" id="password" placeholder="পাসওয়ার্ড">
+                        <input type="password" id="password" placeholder="পাসওয়ার্ড (gando)">
                     </div>
                 </div>
+                <p id="login-error" style="color: #ef4444; font-size: 13px; margin-bottom: 8px; font-weight: bold; display: none;"></p>
                 <button onclick="handleLogin()" class="btn-login-submit" data-key="login_btn">লগইন</button>
                 <p class="register-text"><a href="#" data-key="forgot_pass">পাসওয়ার্ড ভুলে গেছেন?</a></p>
             </div>
         </div>
     </div>
 
-    <!-- Dashboard Main View -->
-    <div id="dashboard" class="dashboard-container hidden">
+    <!-- Dashboard Main View (সরাসরি ডিসপ্লে বন্ধ করা হলো) -->
+    <div id="dashboard" class="dashboard-container" style="display: none;">
         <header class="top-nav">
             <div class="brand">
                 <i class="fa-solid fa-kaaba"></i>
@@ -179,21 +180,5 @@
     </div>
 
     <script src="app.js"></script>
-    <script>
-        function handleLogin() {
-            document.getElementById('login-modal').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            document.body.classList.remove('login-mode');
-            if (typeof renderTable === 'function') renderTable();
-            if (typeof initTheme === 'function') initTheme();
-            if (typeof initLanguage === 'function') initLanguage();
-        }
-
-        function handleLogout() {
-            document.getElementById('login-modal').classList.remove('hidden');
-            document.getElementById('dashboard').classList.add('hidden');
-            document.body.classList.add('login-mode');
-        }
-    </script>
 </body>
-                </html>
+</html>
