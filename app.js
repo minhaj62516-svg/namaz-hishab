@@ -1,8 +1,39 @@
-// ইউজার ক্রেডেনশিয়ালস (আপডেট করা ইমেইল)
-const USERS = {
-    minhaj: { email: "minhaj@gmail.com", pass: "123456" },
-    nadiya: { email: "nadiya@gmail.com", pass: "123456" }
-};
+// ইউজার ক্রেডেনশিয়ালস (সঠিক সিকিউরিটি)
+const USERS = [
+    { email: "minhaj@gmail.com", pass: "123456" },
+    { email: "nadiya@gmail.com", pass: "123456" }
+];
+
+// লগইন ভ্যালিডেশন সিস্টেম
+function handleLogin() {
+    const emailInput = document.getElementById('email').value.trim().toLowerCase();
+    const passInput = document.getElementById('password').value.trim();
+    const errorMsg = document.getElementById('login-error');
+
+    const isValidUser = USERS.some(user => user.email === emailInput && user.pass === passInput);
+
+    if (isValidUser) {
+        errorMsg.style.display = 'none';
+        document.getElementById('login-modal').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        document.body.classList.remove('login-mode');
+        
+        renderTable();
+        initTheme();
+        initLanguage();
+    } else {
+        errorMsg.innerText = "ভুল ইমেইল অথবা পাসওয়ার্ড দিয়েছেন!";
+        errorMsg.style.display = 'block';
+    }
+}
+
+function handleLogout() {
+    document.getElementById('email').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('login-modal').classList.remove('hidden');
+    document.getElementById('dashboard').classList.add('hidden');
+    document.body.classList.add('login-mode');
+}
 
 // ভাষা রূপান্তরের ডিকশনারি
 const translations = {
@@ -254,7 +285,6 @@ function sendAIMessage() {
 function getSmartAIReply(query) {
     const q = query.toLowerCase().trim();
 
-    // ১. গাণিতিক হিসাব বা সাধারণ যোগ/বিয়োগ/গুণ/ভাগ
     if (/^[0-9\s\+\-\*\/\.\(\)]+$/.test(q) && q.length > 1) {
         try {
             const result = eval(q);
@@ -262,7 +292,6 @@ function getSmartAIReply(query) {
         } catch (e) {}
     }
 
-    // ২. অভিবাদন ও সাধারণ শুভেচ্ছা
     if (q.includes('সালাম') || q.includes('assalamu') || q.includes('salam')) {
         return "ওয়া আলাইকুমুস সালাম ওয়া রহমাতুল্লাহ! আশা করি ভালো আছেন। আজ আপনাকে কীভাবে সাহায্য করতে পারি?";
     }
@@ -279,7 +308,6 @@ function getSmartAIReply(query) {
         return "আপনাকেও অনেক ধন্যবাদ! সবসময় আপনার পাশে আছি। ❤️";
     }
 
-    // ৩. অ্যাপ ও কাজের নির্দেশাবলী সংক্রান্ত প্রশ্ন
     if (q.includes('কাজ') || q.includes('হেল্প') || q.includes('help') || q.includes('কী করতে পারো') || q.includes('কি করতে পারো')) {
         return "আমি আপনাকে যেকোনো বিষয়ে তথ্য দিতে পারি! যেমন: নামাজের সময় ও দিকনির্দেশনা, গাণিতিক হিসাব, দিন/তারিখ, মোটিভেশন এবং মিনহাজ ও নাদিয়ার নামাজের ট্র্যাকিং স্টেটাস চেক করতে পারি।";
     }
@@ -287,7 +315,6 @@ function getSmartAIReply(query) {
         return "জি! আর কোনো সাহায্য লাগলে নিঃসংকোচে আমাকে লিখে জানান।";
     }
 
-    // ৪. সময় ও তারিখ
     if (q.includes('সময়') || q.includes('টাইম') || q.includes('time')) {
         const now = new Date();
         return `এখন সময়: ${now.toLocaleTimeString('bn-BD')}`;
@@ -297,7 +324,6 @@ function getSmartAIReply(query) {
         return `আজকের তারিখ: ${now.toLocaleDateString('bn-BD', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
     }
 
-    // ৫. মিনহাজ এবং নাদিয়ার নামাজের হিসেব ও তথ্য
     if (q.includes('মিনহাজ') || q.includes('minhaj')) {
         const savedData = JSON.parse(localStorage.getItem('namaz_tracker_data')) || {};
         let count = 0;
@@ -319,7 +345,6 @@ function getSmartAIReply(query) {
         return `নাদিয়া এ পর্যন্ত মোট ${count}/১৫০ টি ওয়াক্ত নামাজ সম্পন্ন করেছেন। আল্লাহ কবুল করুন!`;
     }
 
-    // ৬. ইসলামিক প্রশ্ন ও পরামর্শ
     if (q.includes('ফজর') || q.includes('fajr')) {
         return "ফজরের নামাজ ২ রাকাত সুন্নাত ও ২ রাকাত ফরজ। রাসুল (সাঃ) বলেছেন: 'ফজরের দু’রাকাত সুন্নাত দুনিয়া ও তার মধ্যকার সমস্ত কিছুর চেয়ে উত্তম।'";
     }
@@ -344,12 +369,10 @@ function getSmartAIReply(query) {
         return islamicQuotes[Math.floor(Math.random() * islamicQuotes.length)];
     }
 
-    // ৭. মোটিভেশন ও অনুপ্রেরণা
     if (q.includes('কষ্ট') || q.includes('মন খারাপ') || q.includes('দুঃখ') || q.includes('হতাশ') || q.includes('মোটিভেশন')) {
         return "ধৈর্য ধরুন! নিশ্চয়ই কষ্টের সাথেই স্বস্তি রয়েছে। (সূরা আল-ইনশিরাহ: ৫)। সব সময় আল্লাহর ওপর ভরসা রাখুন, সব ঠিক হয়ে যাবে ইনশাআল্লাহ। ❤️";
     }
 
-    // ৮. ডিফোল্ট ভ্যারিয়েবল রেসপন্স (বিভিন্ন সময় ভিন্ন কথা বলবে)
     const randomReplies = [
         "আমি বিষয়টি বুঝতে পেরেছি! আর কীভাবে সাহায্য করতে পারি বলুন?",
         "জি, আপনার প্রশ্নটির জন্য ধন্যবাদ! আমি চেষ্টা করছি আপনাকে সেরা তথ্যটি দিতে।",
