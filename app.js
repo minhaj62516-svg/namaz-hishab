@@ -1,7 +1,7 @@
 // ইউজার ক্রেডেনশিয়ালস (সঠিক সিকিউরিটি)
 const USERS = [
-    { email: "minhaj@gmail.com", pass: "123456" },
-    { email: "nadiya@gmail.com", pass: "123456" }
+    { email: "minhaj@gmail.com", pass: "gando" },
+    { email: "nadiya@gmail.com", pass: "gando" }
 ];
 
 // লগইন ভ্যালিডেশন সিস্টেম
