@@ -50,8 +50,8 @@
                 <div class="theme-switch">
                     <span class="mode-label">মোড</span>
                     <div class="toggle-btn-group">
-                        <button class="active">লাইট</button>
-                        <button>ডার্ক</button>
+                        <button id="btn-theme-light" onclick="setTheme('light')" class="active">লাইট</button>
+                        <button id="btn-theme-dark" onclick="setTheme('dark')">ডার্ক</button>
                     </div>
                 </div>
                 <div class="lang-switch">
@@ -167,7 +167,7 @@
             document.getElementById('dashboard').classList.remove('hidden');
             document.body.classList.remove('login-mode');
             if (typeof renderTable === 'function') renderTable();
-            else if (typeof generateTableRows === 'function') generateTableRows();
+            if (typeof initTheme === 'function') initTheme();
         }
 
         function handleLogout() {
@@ -175,11 +175,6 @@
             document.getElementById('dashboard').classList.add('hidden');
             document.body.classList.add('login-mode');
         }
-
-        window.onload = function() {
-            if (typeof renderTable === 'function') renderTable();
-            else if (typeof generateTableRows === 'function') generateTableRows();
-        };
     </script>
 </body>
 </html>
