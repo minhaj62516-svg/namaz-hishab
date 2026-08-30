@@ -12,7 +12,7 @@
     <!-- Login Modal -->
     <div id="login-modal" class="modal-overlay">
         <div class="login-card">
-            <h2>লগইন</h2>
+            <h2 data-key="login_title">লগইন</h2>
             <div class="login-body">
                 <div class="input-group">
                     <div class="input-box">
@@ -26,8 +26,8 @@
                         <input type="password" id="password" placeholder="পাসওয়ার্ড">
                     </div>
                 </div>
-                <button onclick="handleLogin()" class="btn-login-submit">লগইন</button>
-                <p class="register-text"><a href="#">পাসওয়ার্ড ভুলে গেছেন?</a></p>
+                <button onclick="handleLogin()" class="btn-login-submit" data-key="login_btn">লগইন</button>
+                <p class="register-text"><a href="#" data-key="forgot_pass">পাসওয়ার্ড ভুলে গেছেন?</a></p>
             </div>
         </div>
     </div>
@@ -37,7 +37,7 @@
         <header class="top-nav">
             <div class="brand">
                 <i class="fa-solid fa-kaaba"></i>
-                <span>নমাজ হিসাব</span>
+                <span data-key="app_title">নমাজ হিসাব</span>
             </div>
             
             <div class="search-bar">
@@ -48,17 +48,17 @@
 
             <div class="top-actions">
                 <div class="theme-switch">
-                    <span class="mode-label">মোড</span>
+                    <span class="mode-label" data-key="mode_lbl">মোড</span>
                     <div class="toggle-btn-group">
-                        <button id="btn-theme-light" onclick="setTheme('light')" class="active">লাইট</button>
-                        <button id="btn-theme-dark" onclick="setTheme('dark')">ডার্ক</button>
+                        <button id="btn-theme-light" onclick="setTheme('light')" class="active" data-key="light_btn">লাইট</button>
+                        <button id="btn-theme-dark" onclick="setTheme('dark')" data-key="dark_btn">ডার্ক</button>
                     </div>
                 </div>
                 <div class="lang-switch">
-                    <span class="mode-label">ভাষা</span>
+                    <span class="mode-label" data-key="lang_lbl">ভাষা</span>
                     <div class="toggle-btn-group">
-                        <button class="active">বাংলা</button>
-                        <button>ENG</button>
+                        <button id="btn-lang-bn" onclick="setLanguage('bn')" class="active">বাংলা</button>
+                        <button id="btn-lang-en" onclick="setLanguage('en')">ENG</button>
                     </div>
                 </div>
                 <button class="icon-btn" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i></button>
@@ -72,8 +72,8 @@
             </div>
             
             <div class="banner-center">
-                <h2>PRAYER IS THE PILLAR OF RELIGION</h2>
-                <p>নামাজ দ্বীনের খুটি | নামাজ অভ্যাস গড়ুন</p>
+                <h2 data-key="hero_title">PRAYER IS THE PILLAR OF RELIGION</h2>
+                <p data-key="hero_subtitle">নামাজ দ্বীনের খুটি | নামাজ অভ্যাস গড়ুন</p>
             </div>
 
             <div class="profile-card">
@@ -85,26 +85,26 @@
         <section class="table-card">
             <div class="table-header-legend">
                 <div class="legend-items">
-                    <span class="legend green">✔ সম্পূর্ণ</span>
-                    <span class="legend yellow">◐ আংশিক</span>
-                    <span class="legend gray">◯ বাকি</span>
-                    <span class="legend red">✖ মিস</span>
+                    <span class="legend green" data-key="leg_complete">✔ সম্পূর্ণ</span>
+                    <span class="legend yellow" data-key="leg_partial">◐ আংশিক</span>
+                    <span class="legend gray" data-key="leg_remaining">◯ বাকি</span>
+                    <span class="legend red" data-key="leg_missed">✖ মিস</span>
                 </div>
-                <button class="btn-filter"><i class="fa-solid fa-filter"></i> ফিল্টার</button>
+                <button class="btn-filter"><i class="fa-solid fa-filter"></i> <span data-key="btn_filter">ফিল্টার</span></button>
             </div>
 
             <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
-                            <th rowspan="2">দিন</th>
+                            <th rowspan="2" data-key="th_day">দিন</th>
                             <th colspan="5">MINHAJ'S PRAYER LOG</th>
                             <th colspan="5">NADIYA'S PRAYER LOG</th>
-                            <th rowspan="2">দিনের অবস্থা</th>
+                            <th rowspan="2" data-key="th_status">দিনের অবস্থা</th>
                         </tr>
                         <tr class="user-th">
-                            <th>ফজর</th><th>জোহর</th><th>আসর</th><th>মাগরিব</th><th>ইশা</th>
-                            <th>ফজর</th><th>জোহর</th><th>আসর</th><th>মাগরিব</th><th>ইশা</th>
+                            <th data-key="w_fajr">ফজর</th><th data-key="w_dhuhr">জোহর</th><th data-key="w_asr">আসর</th><th data-key="w_maghrib">মাগরিব</th><th data-key="w_isha">ইশা</th>
+                            <th data-key="w_fajr">ফজর</th><th data-key="w_dhuhr">জোহর</th><th data-key="w_asr">আসর</th><th data-key="w_maghrib">মাগরিব</th><th data-key="w_isha">ইশা</th>
                         </tr>
                     </thead>
                     <tbody id="tracker-table-body">
@@ -113,7 +113,7 @@
             </div>
             
             <div class="see-all-container">
-                <button class="btn-see-all">সব দিন দেখুন ↓</button>
+                <button class="btn-see-all" data-key="btn_see_all">সব দিন দেখুন ↓</button>
             </div>
         </section>
 
@@ -124,7 +124,7 @@
                     <div class="circle-progress" style="--percent: 0;">
                         <div class="percent-val">
                             <span>0%</span>
-                            <small>সম্পূর্ণ</small>
+                            <small data-key="complete_lbl">সম্পূর্ণ</small>
                         </div>
                     </div>
                     <ul class="stat-list">
@@ -140,7 +140,7 @@
                     <div class="circle-progress" style="--percent: 0;">
                         <div class="percent-val">
                             <span>0%</span>
-                            <small>সম্পূর্ণ</small>
+                            <small data-key="complete_lbl">সম্পূর্ণ</small>
                         </div>
                     </div>
                     <ul class="stat-list">
@@ -156,7 +156,7 @@
                 <i class="fa-solid fa-trophy trophy-icon"></i>
                 <span>"Love motivational quotes and motivational options in daily life with emotional achievement." - Nadiya!</span>
             </div>
-            <button class="btn-share"><i class="fa-solid fa-share-nodes"></i> শেয়ার করুন</button>
+            <button class="btn-share"><i class="fa-solid fa-share-nodes"></i> <span data-key="btn_share">শেয়ার করুন</span></button>
         </footer>
     </div>
 
@@ -168,6 +168,7 @@
             document.body.classList.remove('login-mode');
             if (typeof renderTable === 'function') renderTable();
             if (typeof initTheme === 'function') initTheme();
+            if (typeof initLanguage === 'function') initLanguage();
         }
 
         function handleLogout() {
@@ -177,4 +178,4 @@
         }
     </script>
 </body>
-</html>
+                                </html>
