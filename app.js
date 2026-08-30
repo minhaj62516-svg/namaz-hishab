@@ -213,7 +213,7 @@ function initLanguage() {
     setLanguage(savedLang);
 }
 
-// Gando AI Functions
+// Gando AI Functions (Advanced Smart Conversational Engine)
 function toggleAIChat() {
     const chatBox = document.getElementById('ai-chat-box');
     if (chatBox) {
@@ -245,23 +245,118 @@ function sendAIMessage() {
     setTimeout(() => {
         const botDiv = document.createElement('div');
         botDiv.className = 'ai-msg bot';
-        botDiv.innerText = getGandoReply(text);
+        botDiv.innerText = getSmartAIReply(text);
         msgContainer.appendChild(botDiv);
         msgContainer.scrollTop = msgContainer.scrollHeight;
-    }, 600);
+    }, 500);
 }
 
-function getGandoReply(query) {
-    const q = query.toLowerCase();
-    if (q.includes('সালাম') || q.includes('hi') || q.includes('hello')) {
-        return "ওয়া আলাইকুমুস সালাম! আমি Gando AI, আপনাদের সালাত ট্র্যাকিং সহকারী।";
-    } else if (q.includes('নামাজ') || q.includes('ওয়াক্ত') || q.includes('সালাত')) {
-        return "নিয়মিত ৫ ওয়াক্ত নামাজ আদায় করার চেষ্টা করুন। আল-কুরআনে বলা হয়েছে, নিশ্চয়ই সালাত নির্ধারিত সময়ে মুমিনদের ওপর আবশ্যক।";
-    } else if (q.includes('মিনহাজ') || q.includes('নাদিয়া') || q.includes('minhaj') || q.includes('nadiya')) {
-        return "মিনহাজ এবং নাদিয়া—দুজনেই খুব সুন্দরভাবে নামাজের হিসাব বজায় রাখছেন! মাশাআল্লাহ।";
-    } else {
-        return "আমি Gando AI! আপনার প্রশ্নটি পেয়েছি। নিয়মিত নামাজ আদায় করুন ও সুস্থ থাকুন। ❤️";
+function getSmartAIReply(query) {
+    const q = query.toLowerCase().trim();
+
+    // ১. গাণিতিক হিসাব বা সাধারণ যোগ/বিয়োগ/গুণ/ভাগ
+    if (/^[0-9\s\+\-\*\/\.\(\)]+$/.test(q) && q.length > 1) {
+        try {
+            const result = eval(q);
+            return `হিসাবের ফলাফল হলো: ${result}`;
+        } catch (e) {}
     }
+
+    // ২. অভিবাদন ও সাধারণ শুভেচ্ছা
+    if (q.includes('সালাম') || q.includes('assalamu') || q.includes('salam')) {
+        return "ওয়া আলাইকুমুস সালাম ওয়া রহমাতুল্লাহ! আশা করি ভালো আছেন। আজ আপনাকে কীভাবে সাহায্য করতে পারি?";
+    }
+    if (q.includes('হাই') || q.includes('হ্যালো') || q.includes('hi') || q.includes('hello') || q.includes('hey')) {
+        return "হ্যালো! আমি Gando AI, আপনার পার্সোনাল অ্যাসিস্ট্যান্ট। বলুন, কী কাজ করতে হবে?";
+    }
+    if (q.includes('কেমন আছ') || q.includes('কেমন আছেন') || q.includes('how are you')) {
+        return "আলহামদুলিল্লাহ, আমি খুবই ভালো আছি! আপনি কেমন আছেন?";
+    }
+    if (q.includes('ভাল') || q.includes('ভালো') || q.includes('fine') || q.includes('good')) {
+        return "শুনে খুব ভালো লাগলো! আলহামদুলিল্লাহ। আপনার দিনটি শুভ হোক।";
+    }
+    if (q.includes('ধন্যবাদ') || q.includes('thanks') || q.includes('thank you')) {
+        return "আপনাকেও অনেক ধন্যবাদ! সবসময় আপনার পাশে আছি। ❤️";
+    }
+
+    // ৩. অ্যাপ ও কাজের নির্দেশাবলী সংক্রান্ত প্রশ্ন
+    if (q.includes('কাজ') || q.includes('হেল্প') || q.includes('help') || q.includes('কী করতে পারো') || q.includes('কি করতে পারো')) {
+        return "আমি আপনাকে যেকোনো বিষয়ে তথ্য দিতে পারি! যেমন: নামাজের সময় ও দিকনির্দেশনা, গাণিতিক হিসাব, দিন/তারিখ, মোটিভেশন এবং মিনহাজ ও নাদিয়ার নামাজের ট্র্যাকিং স্টেটাস চেক করতে পারি।";
+    }
+    if (q.includes('ঠিক আছে') || q.includes('ওকে') || q.includes('ok') || q.includes('accha') || q.includes('আচ্ছা')) {
+        return "জি! আর কোনো সাহায্য লাগলে নিঃসংকোচে আমাকে লিখে জানান।";
+    }
+
+    // ৪. সময় ও তারিখ
+    if (q.includes('সময়') || q.includes('টাইম') || q.includes('time')) {
+        const now = new Date();
+        return `এখন সময়: ${now.toLocaleTimeString('bn-BD')}`;
+    }
+    if (q.includes('তারিখ') || q.includes('দিন') || q.includes('date')) {
+        const now = new Date();
+        return `আজকের তারিখ: ${now.toLocaleDateString('bn-BD', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+    }
+
+    // ৫. মিনহাজ এবং নাদিয়ার নামাজের হিসেব ও তথ্য
+    if (q.includes('মিনহাজ') || q.includes('minhaj')) {
+        const savedData = JSON.parse(localStorage.getItem('namaz_tracker_data')) || {};
+        let count = 0;
+        for (let d = 1; d <= 30; d++) {
+            for (let w = 1; w <= 5; w++) {
+                if (savedData[`day_${d}_waqt_${w}`]) count++;
+            }
+        }
+        return `মিনহাজ এ পর্যন্ত মোট ${count}/১৫০ টি ওয়াক্ত নামাজ সম্পন্ন করেছেন। মাশাআল্লাহ!`;
+    }
+    if (q.includes('নাদিয়া') || q.includes('নাদিয়া') || q.includes('nadiya')) {
+        const savedData = JSON.parse(localStorage.getItem('namaz_tracker_data')) || {};
+        let count = 0;
+        for (let d = 1; d <= 30; d++) {
+            for (let w = 6; w <= 10; w++) {
+                if (savedData[`day_${d}_waqt_${w}`]) count++;
+            }
+        }
+        return `নাদিয়া এ পর্যন্ত মোট ${count}/১৫০ টি ওয়াক্ত নামাজ সম্পন্ন করেছেন। আল্লাহ কবুল করুন!`;
+    }
+
+    // ৬. ইসলামিক প্রশ্ন ও পরামর্শ
+    if (q.includes('ফজর') || q.includes('fajr')) {
+        return "ফজরের নামাজ ২ রাকাত সুন্নাত ও ২ রাকাত ফরজ। রাসুল (সাঃ) বলেছেন: 'ফজরের দু’রাকাত সুন্নাত দুনিয়া ও তার মধ্যকার সমস্ত কিছুর চেয়ে উত্তম।'";
+    }
+    if (q.includes('জোহর') || q.includes('dhuhr')) {
+        return "জোহরের নামাজ: ৪ রাকাত সুন্নাত, ৪ রাকাত ফরজ, ২ রাকাত সুন্নাত ও ২ রাকাত নফল।";
+    }
+    if (q.includes('আসর') || q.includes('asr')) {
+        return "আসরের নামাজ: ৪ রাকাত সুন্নাত (গাইরে মুয়াক্কাদাহ) এবং ৪ রাকাত ফরজ।";
+    }
+    if (q.includes('মাগরিব') || q.includes('maghrib')) {
+        return "মাগরিবের নামাজ: ৩ রাকাত ফরজ, ২ রাকাত সুন্নাত ও ২ রাকাত নফল।";
+    }
+    if (q.includes('ইশা') || q.includes('isha')) {
+        return "ইশার নামাজ: ৪ রাকাত সুন্নাত, ৪ রাকাত ফরজ, ২ রাকাত সুন্নাত, ২ রাকাত নফল, ৩ রাকাত বিতর ও ২ রাকাত নফল।";
+    }
+    if (q.includes('নামাজ') || q.includes('ওয়াক্ত') || q.includes('সালাত') || q.includes('dua') || q.includes('দোয়া')) {
+        const islamicQuotes = [
+            "নিয়মিত ৫ ওয়াক্ত নামাজ আদায় করুন। নামাজ হলো জান্নাতের চাবিকাঠি।",
+            "নিশ্চয়ই সালাত মানুষকে অশ্লীল ও মন্দ কাজ থেকে বিরত রাখে। (সূরা আনকাবুত: ৪৫)",
+            "যে ব্যক্তি সময়মতো নামাজ আদায় করে, আল্লাহ তাকে বিশেষ শান্তিতে রাখেন।"
+        ];
+        return islamicQuotes[Math.floor(Math.random() * islamicQuotes.length)];
+    }
+
+    // ৭. মোটিভেশন ও অনুপ্রেরণা
+    if (q.includes('কষ্ট') || q.includes('মন খারাপ') || q.includes('দুঃখ') || q.includes('হতাশ') || q.includes('মোটিভেশন')) {
+        return "ধৈর্য ধরুন! নিশ্চয়ই কষ্টের সাথেই স্বস্তি রয়েছে। (সূরা আল-ইনশিরাহ: ৫)। সব সময় আল্লাহর ওপর ভরসা রাখুন, সব ঠিক হয়ে যাবে ইনশাআল্লাহ। ❤️";
+    }
+
+    // ৮. ডিফোল্ট ভ্যারিয়েবল রেসপন্স (বিভিন্ন সময় ভিন্ন কথা বলবে)
+    const randomReplies = [
+        "আমি বিষয়টি বুঝতে পেরেছি! আর কীভাবে সাহায্য করতে পারি বলুন?",
+        "জি, আপনার প্রশ্নটির জন্য ধন্যবাদ! আমি চেষ্টা করছি আপনাকে সেরা তথ্যটি দিতে।",
+        "আমি একটি স্মার্ট ট্র্যাকিং AI। যেকোনো হিসাব, সময় বা ইসলামিক নির্দেশনার জন্য আমাকে বলতে পারেন!",
+        "আমি আপনার প্রতিটি কথা মন দিয়ে শুনছি। বলুন, পরে কী কাজ করবো?"
+    ];
+    return randomReplies[Math.floor(Math.random() * randomReplies.length)];
 }
 
 document.addEventListener("DOMContentLoaded", () => {
