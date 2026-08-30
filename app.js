@@ -208,6 +208,59 @@ function initLanguage() {
     setLanguage(savedLang);
 }
 
+// Gando AI Functions
+function toggleAIChat() {
+    const chatBox = document.getElementById('ai-chat-box');
+    if (chatBox) {
+        chatBox.classList.toggle('hidden');
+    }
+}
+
+function handleAIKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendAIMessage();
+    }
+}
+
+function sendAIMessage() {
+    const input = document.getElementById('ai-input');
+    const msgContainer = document.getElementById('ai-messages');
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    // User message
+    const userDiv = document.createElement('div');
+    userDiv.className = 'ai-msg user';
+    userDiv.innerText = text;
+    msgContainer.appendChild(userDiv);
+
+    input.value = '';
+    msgContainer.scrollTop = msgContainer.scrollHeight;
+
+    // Bot Auto Reply (Gando AI Logic)
+    setTimeout(() => {
+        const botDiv = document.createElement('div');
+        botDiv.className = 'ai-msg bot';
+        botDiv.innerText = getGandoReply(text);
+        msgContainer.appendChild(botDiv);
+        msgContainer.scrollTop = msgContainer.scrollHeight;
+    }, 600);
+}
+
+function getGandoReply(query) {
+    const q = query.toLowerCase();
+    if (q.includes('সালাম') || q.includes('hi') || q.includes('hello')) {
+        return "ওয়া আলাইকুমুস সালাম! আমি Gando AI, আপনাদের সালাত ট্র্যাকিং সহকারী।";
+    } else if (q.includes('নামাজ') || q.includes('ওয়াক্ত') || q.includes('সালাত')) {
+        return "নিয়মিত ৫ ওয়াক্ত নামাজ আদায় করার চেষ্টা করুন। আল-কুরআনে বলা হয়েছে, নিশ্চয়ই সালাত নির্ধারিত সময়ে মুমিনদের ওপর আবশ্যক।";
+    } else if (q.includes('মিনহাজ') || q.includes('নাদিয়া') || q.includes('minhaj') || q.includes('nadiya')) {
+        return "মিনহাজ এবং নাদিয়া—দুজনেই খুব সুন্দরভাবে নামাজের হিসাব বজায় রাখছেন! মাশাআল্লাহ।";
+    } else {
+        return "আমি Gando AI! আপনার প্রশ্নটি পেয়েছি। নিয়মিত নামাজ আদায় করুন ও সুস্থ থাকুন। ❤️";
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     renderTable();
     initTheme();
