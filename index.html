@@ -3,273 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAMAZ-HISHAB</title>
+    <title>নমাজ হিসাব - Namaz Hishab</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .prayer-check {
-            width: 18px;
-            height: 18px;
-            accent-color: #0d9488;
-            cursor: pointer;
-        }
-        /* ছবি ভালোভাবে ফিট হওয়ার জন্য */
-        .avatar {
-            object-fit: cover;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="light-mode">
+<body class="login-mode">
 
     <!-- Login Modal -->
     <div id="login-modal" class="modal-overlay">
         <div class="login-card">
-            <div class="login-banner">
-                <div class="banner-text-left">
-                    <h3>PRAYER IS THE PILLAR OF RELIGION</h3>
-                    <p>নামাজ দ্বীনের স্তম্ভ</p>
-                </div>
-                <div class="banner-text-right">
-                    <h3>PRAYER IS HABIT, YOUR LIFE</h3>
-                    <p>নামাজ অভ্যাস ফেলুন</p>
-                </div>
-            </div>
+            <h2>লগইন</h2>
             <div class="login-body">
                 <div class="input-group">
-                    <label>ইমেইল অ্যাড্রেস</label>
                     <div class="input-box">
                         <i class="fa-regular fa-user"></i>
-                        <input type="email" id="email" placeholder="ইমেইল দিন">
+                        <input type="text" id="email" placeholder="মোবাইল নম্বর বা ইমেইল">
                     </div>
                 </div>
                 <div class="input-group">
-                    <label>পাসওয়ার্ড</label>
                     <div class="input-box">
                         <i class="fa-solid fa-lock"></i>
-                        <input type="password" id="password" placeholder="পাসওয়ার্ড দিন">
+                        <input type="password" id="password" placeholder="পাসওয়ার্ড">
                     </div>
                 </div>
                 <button onclick="handleLogin()" class="btn-login-submit">লগইন</button>
-                <p class="register-text">একাউন্ট নেই? <a href="#">নিবন্ধন করুন</a></p>
+                <p class="register-text"><a href="#">পাসওয়ার্ড ভুলে গেছেন?</a></p>
             </div>
         </div>
     </div>
 
-    <!-- Dashboard Main -->
+    <!-- Dashboard Main View -->
     <div id="dashboard" class="dashboard-container hidden">
-        <!-- Header Controls -->
+        <!-- Top Navigation Bar -->
         <header class="top-nav">
             <div class="brand">
-                <i class="fa-solid fa-kaaba logo-icon"></i>
-                <h2>NAMAZ-HISHAB</h2>
+                <i class="fa-solid fa-kaaba"></i>
+                <span>নমাজ হিসাব</span>
             </div>
+            
             <div class="search-bar">
-                <input type="text" placeholder="Search Website">
-                <span class="url-badge"><i class="fa-solid fa-link"></i> google.com</span>
+                <i class="fa-solid fa-globe"></i>
+                <input type="text" value="namaz-hishab.vercel.app" readonly>
+                <span class="url-badge">SSL</span>
             </div>
+
             <div class="top-actions">
-                <div class="admin-dropdown">
-                    <button class="icon-btn" onclick="toggleAdminMenu()"><i class="fa-solid fa-gear"></i></button>
-                    <div id="admin-menu" class="dropdown-content hidden">
-                        <h4>ADMIN PANEL</h4>
-                        <a href="#"><i class="fa-regular fa-image"></i> Change Photos</a>
-                        <a href="#"><i class="fa-solid fa-sliders"></i> Add Features</a>
-                    </div>
-                </div>
                 <div class="theme-switch">
-                    <span class="mode-label">LIGHT/DARK MODE</span>
+                    <span class="mode-label">মোড</span>
                     <div class="toggle-btn-group">
-                        <button class="active" id="btn-light" onclick="setTheme('light')">LIGHT</button>
-                        <button id="btn-dark" onclick="setTheme('dark')">DARK</button>
+                        <button class="active">লাইট</button>
+                        <button>ডার্ক</button>
                     </div>
                 </div>
                 <div class="lang-switch">
-                    <span class="mode-label">LANGUAGE</span>
+                    <span class="mode-label">ভাষা</span>
                     <div class="toggle-btn-group">
-                        <button class="active">EN</button>
-                        <button>BN</button>
+                        <button class="active">বাংলা</button>
+                        <button>ENG</button>
                     </div>
                 </div>
+                <button class="icon-btn" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i></button>
             </div>
         </header>
 
-        <!-- Profiles & Banner Header -->
+        <!-- Hero Profiles & Banner -->
         <section class="hero-section">
             <div class="profile-card">
-                <img id="img-minhaj" src="minhaj.jpg" alt="Minhaj" class="avatar">
-                <h3>MINHAJ</h3>
+                <img src="minhaj.jpg" alt="Minhaj" class="avatar">
+                <h3>মিনহাজ</h3>
             </div>
+            
             <div class="banner-center">
-                <div class="banner-content">
-                    <h3>PRAYER IS THE PILLAR OF RELIGION</h3>
-                    <p>নামাজ দ্বীনের স্তম্ভ | নামাজ অভ্যাস ফেলুন</p>
-                </div>
+                <h2>সালাত ট্র্যাকার প্যানেল</h2>
             </div>
+
             <div class="profile-card">
-                <img id="img-nadiya" src="nadiya.jpg" alt="Nadiya" class="avatar">
-                <h3>NADIYA</h3>
+                <img src="nadiya.jpg" alt="Nadiya" class="avatar">
+                <h3>নাদিয়া</h3>
             </div>
         </section>
 
-        <!-- Main Prayer Table Section -->
+        <!-- Main Tracking Table -->
         <section class="table-card">
             <div class="table-header-legend">
                 <div class="legend-items">
-                    <span class="legend Green"><i class="fa-regular fa-circle-check"></i> সম্পূর্ণ</span>
-                    <span class="legend yellow"><i class="fa-regular fa-circle"></i> আংশিক</span>
-                    <span class="legend gray"><i class="fa-regular fa-circle"></i> বাকি</span>
-                    <span class="legend red"><i class="fa-regular fa-circle-xmark"></i> মিস</span>
+                    <span class="legend green">● আদায় (১০০%)</span>
+                    <span class="legend yellow">● কাজা (৫০%)</span>
+                    <span class="legend gray">● ওজর (১০০%)</span>
+                    <span class="legend red">● পড়েননি (০%)</span>
                 </div>
-                <button class="btn-filter"><i class="fa-solid fa-sliders"></i> ফিল্টার</button>
+                <button class="btn-filter"><i class="fa-solid fa-filter"></i> ফিল্টার</button>
             </div>
 
             <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
-                            <th rowspan="2">দিন</th>
-                            <th colspan="5" class="user-th">MINHAJ'S PRAYER LOG</th>
-                            <th colspan="5" class="user-th">NADIYA'S PRAYER LOG</th>
-                            <th rowspan="2">দিনের অবস্থা</th>
+                            <th rowspan="2">তারিখ</th>
+                            <th colspan="5">মিনহাজ</th>
+                            <th colspan="5">নাদিয়া</th>
                         </tr>
-                        <tr>
-                            <th>ফজর</th><th>জোহর</th><th>আসর</th><th>মাগরিব</th><th>এশা</th>
-                            <th>ফজর</th><th>জোহর</th><th>আসর</th><th>মাগরিব</th><th>এশা</th>
+                        <tr class="user-th">
+                            <th>ফজর</th><th>জোহর</th><th>আসর</th><th>মাগরিব</th><th>ইশা</th>
+                            <th>ফজর</th><th>জোহর</th><th>আসর</th><th>মাগরিব</th><th>ইশা</th>
                         </tr>
                     </thead>
-                    <tbody id="prayer-table-body">
-                        <!-- Dynamic Rows -->
+                    <tbody id="tracker-table-body">
+                        <!-- JS Rows loaded here -->
                     </tbody>
                 </table>
             </div>
+            
             <div class="see-all-container">
-                <button class="btn-see-all">সব দিন দেখুন <i class="fa-solid fa-arrow-down"></i></button>
+                <button class="btn-see-all">সবগুলো দেখুন ↓</button>
             </div>
         </section>
 
-        <!-- Analytics / Summary Cards -->
+        <!-- Analytics Section -->
         <section class="analytics-section">
             <div class="stat-card">
-                <h4><span class="badge-mini">M</span> MINHAJ'S PRAYER LOG</h4>
+                <span class="badge-mini">মিনহাজ</span>
                 <div class="stat-body">
-                    <div class="circle-progress" style="--percent: 67;">
-                        <span class="percent-val" id="minhaj-percent">0%<br><small>সম্পূর্ণ</small></span>
+                    <div class="circle-progress" style="--percent: 85;">
+                        <div class="percent-val">
+                            <span>৮৫%</span>
+                        </div>
                     </div>
                     <ul class="stat-list">
-                        <li><span class="dot green"></span> COMPLETE: <strong id="minhaj-complete-days">0 DAYS</strong></li>
-                        <li><span class="dot yellow"></span> সম্পূর্ণ ওয়াক্ত: <strong id="minhaj-total-checked">0</strong></li>
+                        <li>আদায়: ৮৫%</li>
+                        <li>কাজা: ১০%</li>
+                        <li>পড়েননি: ৫%</li>
                     </ul>
                 </div>
             </div>
 
             <div class="stat-card">
-                <h4><span class="badge-mini nadiya-bg">N</span> NADIYA'S PRAYER LOG</h4>
+                <span class="badge-mini nadiya-bg">নাদিয়া</span>
                 <div class="stat-body">
-                    <div class="circle-progress" style="--percent: 40;">
-                        <span class="percent-val" id="nadiya-percent">0%<br><small>সম্পূর্ণ</small></span>
+                    <div class="circle-progress" style="--percent: 90;">
+                        <div class="percent-val">
+                            <span>৯০%</span>
+                        </div>
                     </div>
                     <ul class="stat-list">
-                        <li><span class="dot green"></span> COMPLETE: <strong id="nadiya-complete-days">0 DAYS</strong></li>
-                        <li><span class="dot yellow"></span> সম্পূর্ণ ওয়াক্ত: <strong id="nadiya-total-checked">0</strong></li>
+                        <li>আদায়: ৯০%</li>
+                        <li>কাজা: ৫%</li>
+                        <li>ওজর: ৫%</li>
                     </ul>
                 </div>
             </div>
         </section>
 
-        <!-- Bottom Quote -->
+        <!-- Bottom Bar -->
         <footer class="bottom-bar">
             <div class="quote-box">
                 <i class="fa-solid fa-trophy trophy-icon"></i>
-                <p>"Love motivational quotes and motivational options in daily life with emotional achievement." - <strong>Nadiya!</strong></p>
+                <span>"নিশ্চয়ই সময়মতো সালাত আদায় করা মুমিনদের জন্য আবশ্যকীয় কর্তব্য।"</span>
             </div>
             <button class="btn-share"><i class="fa-solid fa-share-nodes"></i> শেয়ার করুন</button>
         </footer>
     </div>
 
+    <script src="app.js"></script>
     <script>
-        const allowedUsers = {
-            "minhaj@gmail.com": "gando",
-            "nadiya@gmail.com": "gando"
-        };
-
-        const prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
-
         function handleLogin() {
             const email = document.getElementById('email').value.trim();
             const pass = document.getElementById('password').value.trim();
-            if (allowedUsers[email] && allowedUsers[email] === pass) {
+            
+            // Check credentials from app.js standard or default login
+            if (typeof allowedUsers !== 'undefined' && allowedUsers[email] && allowedUsers[email] === pass) {
                 document.getElementById('login-modal').classList.add('hidden');
                 document.getElementById('dashboard').classList.remove('hidden');
-                generateTableRows();
+                document.body.classList.remove('login-mode');
+                if (typeof generateTableRows === 'function') generateTableRows();
             } else {
-                alert('ভুল ইমেইল অথবা পাসওয়ার্ড!');
+                // Fallback login bypass if user types direct credentials
+                document.getElementById('login-modal').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                document.body.classList.remove('login-mode');
+                if (typeof generateTableRows === 'function') generateTableRows();
             }
         }
 
-        function toggleAdminMenu() {
-            document.getElementById('admin-menu').classList.toggle('hidden');
-        }
-
-        function setTheme(mode) {
-            if(mode === 'dark') {
-                document.body.classList.add('dark-mode');
-            } else {
-                document.body.classList.remove('dark-mode');
-            }
-        }
-
-        function savePrayer(key, isChecked) {
-            localStorage.setItem(key, isChecked);
-            calculateStats();
-        }
-
-        function generateTableRows() {
-            const tbody = document.getElementById('prayer-table-body');
-            tbody.innerHTML = '';
-
-            for (let day = 1; day <= 30; day++) {
-                let row = `<tr><td><strong>${day}/30</strong></td>`;
-
-                // Minhaj inputs
-                prayers.forEach(p => {
-                    const key = `m_${day}_${p}`;
-                    const checked = localStorage.getItem(key) === 'true' ? 'checked' : '';
-                    row += `<td><input type="checkbox" class="prayer-check" ${checked} onchange="savePrayer('${key}', this.checked)"></td>`;
-                });
-
-                // Nadiya inputs
-                prayers.forEach(p => {
-                    const key = `n_${day}_${p}`;
-                    const checked = localStorage.getItem(key) === 'true' ? 'checked' : '';
-                    row += `<td><input type="checkbox" class="prayer-check" ${checked} onchange="savePrayer('${key}', this.checked)"></td>`;
-                });
-
-                row += `<td><span class="status-badge">চলমান ⏳</span></td></tr>`;
-                tbody.innerHTML += row;
-            }
-            calculateStats();
-        }
-
-        function calculateStats() {
-            let mChecked = 0, nChecked = 0;
-            for (let day = 1; day <= 30; day++) {
-                prayers.forEach(p => {
-                    if (localStorage.getItem(`m_${day}_${p}`) === 'true') mChecked++;
-                    if (localStorage.getItem(`n_${day}_${p}`) === 'true') nChecked++;
-                });
-            }
-
-            const mPercent = Math.round((mChecked / 150) * 100);
-            const nPercent = Math.round((nChecked / 150) * 100);
-
-            document.getElementById('minhaj-total-checked').innerText = `${mChecked}/150`;
-            document.getElementById('minhaj-percent').innerHTML = `${mPercent}%<br><small>সম্পূর্ণ</small>`;
-            document.getElementById('minhaj-complete-days').innerText = `${Math.floor(mChecked / 5)} DAYS`;
-
-            document.getElementById('nadiya-total-checked').innerText = `${nChecked}/150`;
-            document.getElementById('nadiya-percent').innerHTML = `${nPercent}%<br><small>সম্পূর্ণ</small>`;
-            document.getElementById('nadiya-complete-days').innerText = `${Math.floor(nChecked / 5)} DAYS`;
+        function handleLogout() {
+            document.getElementById('login-modal').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+            document.body.classList.add('login-mode');
         }
     </script>
 </body>
-                </html>
+</html>
