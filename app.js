@@ -100,3 +100,40 @@ function updateAnalytics() {
 
 // পেজ লোড হলেই রান হবে
 document.addEventListener("DOMContentLoaded", renderTable);
+// Theme Toggle Functionality
+function setupThemeToggle() {
+    const themeButtons = document.querySelectorAll('.theme-switch .toggle-btn-group button');
+    const savedTheme = localStorage.getItem('namaz_theme') || 'light';
+
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        if (themeButtons.length >= 2) {
+            themeButtons[0].classList.remove('active');
+            themeButtons[1].classList.add('active');
+        }
+    }
+
+    if (themeButtons.length >= 2) {
+        // Light Button Click
+        themeButtons[0].addEventListener('click', () => {
+            document.body.classList.remove('dark-mode');
+            themeButtons[0].classList.add('active');
+            themeButtons[1].classList.remove('active');
+            localStorage.setItem('namaz_theme', 'light');
+        });
+
+        // Dark Button Click
+        themeButtons[1].addEventListener('click', () => {
+            document.body.classList.add('dark-mode');
+            themeButtons[1].classList.add('active');
+            themeButtons[0].classList.remove('active');
+            localStorage.setItem('namaz_theme', 'dark');
+        });
+    }
+}
+
+// Ensure theme initialization on page load
+document.addEventListener("DOMContentLoaded", () => {
+    setupThemeToggle();
+});
+
