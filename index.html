@@ -1,124 +1,58 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Namaz Hishab | নামাজের হিসাব</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-</head>
-<body class="light-mode">
+const prayers = [
+    { id: 'fajr', bn: 'ফজর', en: 'Fajr' },
+    { id: 'dhuhr', bn: 'জোহর', en: 'Dhuhr' },
+    { id: 'asr', bn: 'আসর', en: 'Asr' },
+    { id: 'maghrib', bn: 'মাগরিব', en: 'Maghrib' },
+    { id: 'isha', bn: 'এশা', en: 'Isha' }
+];
 
-    <!-- Top Navigation Bar -->
-    <header class="navbar">
-        <div class="logo">
-            <i class="fa-solid fa-kaaba"></i> <span>NAMAZ-HISHAB</span>
-        </div>
-        <div class="nav-controls">
-            <button id="theme-toggle" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i></button>
-            <button id="lang-toggle" onclick="toggleLanguage()">EN / BN</button>
-        </div>
-    </header>
+// পারমিশন দেওয়া ইমেইল ও পাসওয়ার্ড
+const allowedUsers = {
+    "minhaj@gmail.com": "gando",  // মিনহাজের লগইন
+    "nadiya@gmail.com": "gando"   // নাদিয়ার লগইন
+};
 
-    <!-- Login Modal Screen -->
-    <div id="login-modal" class="modal">
-        <div class="login-card">
-            <div class="islamic-banner">
-                <h3>PRAYER IS THE PILLAR OF RELIGION</h3>
-                <p>নামাজ দ্বীনের স্তম্ভ | নামাজ কায়েম করুন</p>
-            </div>
-            <div class="login-form">
-                <h2>লগইন করুন</h2>
-                <div class="input-group">
-                    <i class="fa-solid fa-envelope"></i>
-                    <input type="email" id="email" placeholder="ইমেইল এড্রেস">
-                </div>
-                <div class="input-group">
-                    <i class="fa-solid fa-lock"></i>
-                    <input type="password" id="password" placeholder="পাসওয়ার্ড">
-                </div>
-                <button type="button" onclick="handleLogin()" class="login-btn">লগইন</button>
-            </div>
-        </div>
-    </div>
+let currentLang = 'bn';
 
-    <!-- Main Dashboard Screen -->
-    <main id="dashboard" class="dashboard hidden">
-        <div class="banner-card">
-            <h2>স্বাগতম, <span id="user-display-name">ব্যবহারকারী</span>! 🤲</h2>
-            <p>প্রতিদিনের সালাত সময়মতো আদায় করার চেষ্টা করি</p>
-        </div>
+function handleLogin() {
+    const emailInput = document.getElementById('email').value.trim();
+    const passwordInput = document.getElementById('password').value.trim();
 
-        <div class="profiles-container">
-            <!-- Minhaj Column -->
-            <div class="user-card" id="card-minhaj">
-                <img src="minhaj.jpg" alt="Minhaj" class="profile-img" id="img-minhaj" onerror="this.src='https://via.placeholder.com/80?text=Minhaj'">
-                <h3>MINHAJ</h3>
-                <div class="prayer-list" id="minhaj-prayers"></div>
-            </div>
+    if (allowedUsers[emailInput] && allowedUsers[emailInput] === passwordInput) {
+        document.getElementById('login-modal').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        document.getElementById('user-display-name').innerText = emailInput.split('@')[0];
+        renderPrayers();
+    } else {
+        alert('ভুল ইমেইল অথবা পাসওয়ার্ড! সঠিক তথ্য দিয়ে চেষ্টা করুন।');
+    }
+}
 
-            <!-- Nadiya Column -->
-            <div class="user-card" id="card-nadiya">
-                <img src="nadiya.jpg" alt="Nadiya" class="profile-img" id="img-nadiya" onerror="this.src='https://via.placeholder.com/80?text=Nadiya'">
-                <h3>NADIYA</h3>
-                <div class="prayer-list" id="nadiya-prayers"></div>
-            </div>
-        </div>
-    </main>
+function toggleTheme() {
+    document.body.classList.toggle('dark-mode');
+}
 
-    <script>
-        const prayers = [
-            { id: 'fajr', bn: 'ফজর', en: 'Fajr' },
-            { id: 'dhuhr', bn: 'জোহর', en: 'Dhuhr' },
-            { id: 'asr', bn: 'আসর', en: 'Asr' },
-            { id: 'maghrib', bn: 'মাগরিব', en: 'Maghrib' },
-            { id: 'isha', bn: 'এশা', en: 'Isha' }
-        ];
+function toggleLanguage() {
+    currentLang = currentLang === 'bn' ? 'en' : 'bn';
+    renderPrayers();
+}
 
-        let currentLang = 'bn';
-
-        function handleLogin() {
-            const emailInput = document.getElementById('email');
-            const email = emailInput ? emailInput.value : '';
-            
-            if (email.trim() !== '') {
-                document.getElementById('login-modal').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-                document.getElementById('user-display-name').innerText = email.split('@')[0];
-                renderPrayers();
-            } else {
-                alert('দয়া করে ইমেইল দিন');
-            }
-        }
-
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-        }
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'bn' ? 'en' : 'bn';
-            renderPrayers();
-        }
-
-        function renderPrayers() {
-            const users = ['minhaj', 'nadiya'];
-            users.forEach(user => {
-                const container = document.getElementById(`${user}-prayers`);
-                if (!container) return;
-                container.innerHTML = '';
-                
-                prayers.forEach(p => {
-                    const name = currentLang === 'bn' ? p.bn : p.en;
-                    const div = document.createElement('div');
-                    div.style.cssText = 'display:flex; justify-content:space-between; align-items:center; margin:10px 0; padding:8px; border-bottom:1px solid var(--border-color);';
-                    div.innerHTML = `
-                        <span>${name}</span>
-                        <input type="checkbox" id="${user}-${p.id}" style="width:20px; height:20px; cursor:pointer;">
-                    `;
-                    container.appendChild(div);
-                });
-            });
-        }
-    </script>
-</body>
-</html>
+function renderPrayers() {
+    const users = ['minhaj', 'nadiya'];
+    users.forEach(user => {
+        const container = document.getElementById(`${user}-prayers`);
+        if (!container) return;
+        container.innerHTML = '';
+        
+        prayers.forEach(p => {
+            const name = currentLang === 'bn' ? p.bn : p.en;
+            const div = document.createElement('div');
+            div.style.cssText = 'display:flex; justify-content:space-between; align-items:center; margin:10px 0; padding:8px; border-bottom:1px solid var(--border-color);';
+            div.innerHTML = `
+                <span>${name}</span>
+                <input type="checkbox" id="${user}-${p.id}" style="width:20px; height:20px; cursor:pointer;">
+            `;
+            container.appendChild(div);
+        });
+    });
+}
