@@ -6,10 +6,18 @@
     <title>NAMAZ-HISHAB</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Interactive Checkbox Style */
+        .prayer-check {
+            width: 18px;
+            height: 18px;
+            accent-color: #0d9488;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body class="light-mode">
 
-    <!-- Login Modal -->
     <div id="login-modal" class="modal-overlay">
         <div class="login-card">
             <div class="login-banner">
@@ -35,7 +43,6 @@
                     <div class="input-box">
                         <i class="fa-solid fa-lock"></i>
                         <input type="password" id="password" placeholder="পাসওয়ার্ড দিন">
-                        <i class="fa-regular fa-eye-slash toggle-pass"></i>
                     </div>
                 </div>
                 <button onclick="handleLogin()" class="btn-login-submit">লগইন</button>
@@ -44,9 +51,7 @@
         </div>
     </div>
 
-    <!-- Dashboard Main -->
     <div id="dashboard" class="dashboard-container hidden">
-        <!-- Header Controls -->
         <header class="top-nav">
             <div class="brand">
                 <i class="fa-solid fa-kaaba logo-icon"></i>
@@ -61,16 +66,15 @@
                     <button class="icon-btn" onclick="toggleAdminMenu()"><i class="fa-solid fa-gear"></i></button>
                     <div id="admin-menu" class="dropdown-content hidden">
                         <h4>ADMIN PANEL</h4>
-                        <a href="#"><i class="fa-regular fa-image"></i> Change Photos</a>
+                        <a href="#" onclick="changePhotos()"><i class="fa-regular fa-image"></i> Change Photos</a>
                         <a href="#"><i class="fa-solid fa-sliders"></i> Add Features</a>
-                        <a href="#"><i class="fa-regular fa-file-lines"></i> View Audit Log</a>
                     </div>
                 </div>
                 <div class="theme-switch">
                     <span class="mode-label">LIGHT/DARK MODE</span>
                     <div class="toggle-btn-group">
-                        <button class="active" onclick="setTheme('light')">LIGHT</button>
-                        <button onclick="setTheme('dark')">DARK</button>
+                        <button class="active" id="btn-light" onclick="setTheme('light')">LIGHT</button>
+                        <button id="btn-dark" onclick="setTheme('dark')">DARK</button>
                     </div>
                 </div>
                 <div class="lang-switch">
@@ -83,10 +87,9 @@
             </div>
         </header>
 
-        <!-- Profiles & Banner Header -->
         <section class="hero-section">
             <div class="profile-card">
-                <img src="https://ui-avatars.com/api/?name=Minhaj&background=0d9488&color=fff&size=128" alt="Minhaj" class="avatar">
+                <img id="img-minhaj" src="https://ui-avatars.com/api/?name=Minhaj&background=0d9488&color=fff&size=128" alt="Minhaj" class="avatar">
                 <h3>MINHAJ</h3>
             </div>
             <div class="banner-center">
@@ -96,12 +99,11 @@
                 </div>
             </div>
             <div class="profile-card">
-                <img src="https://ui-avatars.com/api/?name=Nadiya&background=e11d48&color=fff&size=128" alt="Nadiya" class="avatar">
+                <img id="img-nadiya" src="https://ui-avatars.com/api/?name=Nadiya&background=e11d48&color=fff&size=128" alt="Nadiya" class="avatar">
                 <h3>NADIYA</h3>
             </div>
         </section>
 
-        <!-- Main Prayer Table Section -->
         <section class="table-card">
             <div class="table-header-legend">
                 <div class="legend-items">
@@ -118,8 +120,8 @@
                     <thead>
                         <tr>
                             <th rowspan="2">দিন</th>
-                            <th colspan="5" class="user-th"><img src="https://ui-avatars.com/api/?name=Minhaj" class="mini-avatar"> MINHAJ'S PRAYER LOG</th>
-                            <th colspan="5" class="user-th"><img src="https://ui-avatars.com/api/?name=Nadiya" class="mini-avatar"> NADIYA'S PRAYER LOG</th>
+                            <th colspan="5" class="user-th">MINHAJ'S PRAYER LOG</th>
+                            <th colspan="5" class="user-th">NADIYA'S PRAYER LOG</th>
                             <th rowspan="2">দিনের অবস্থা</th>
                         </tr>
                         <tr>
@@ -128,8 +130,7 @@
                         </tr>
                     </thead>
                     <tbody id="prayer-table-body">
-                        <!-- JS generated 30 days rows -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
             <div class="see-all-container">
@@ -137,19 +138,16 @@
             </div>
         </section>
 
-        <!-- Analytics / Summary Cards -->
         <section class="analytics-section">
             <div class="stat-card">
                 <h4><span class="badge-mini">M</span> MINHAJ'S PRAYER LOG</h4>
                 <div class="stat-body">
                     <div class="circle-progress" style="--percent: 67;">
-                        <span class="percent-val">67%<br><small>সম্পূর্ণ</small></span>
+                        <span class="percent-val" id="minhaj-percent">0%<br><small>সম্পূর্ণ</small></span>
                     </div>
                     <ul class="stat-list">
-                        <li><span class="dot green"></span> COMPLETE: <strong>30 DAYS</strong></li>
-                        <li><span class="dot yellow"></span> সম্পূর্ণ: <strong>20 দিন</strong></li>
-                        <li><span class="dot red"></span> আংশিক: <strong>5 দিন</strong></li>
-                        <li><span class="dot gray"></span> বাকি: <strong>3 দিন</strong></li>
+                        <li><span class="dot green"></span> COMPLETE: <strong id="minhaj-complete-days">0 DAYS</strong></li>
+                        <li><span class="dot yellow"></span> সম্পূর্ণ ওয়াক্ত: <strong id="minhaj-total-checked">0</strong></li>
                     </ul>
                 </div>
             </div>
@@ -158,19 +156,16 @@
                 <h4><span class="badge-mini nadiya-bg">N</span> NADIYA'S PRAYER LOG</h4>
                 <div class="stat-body">
                     <div class="circle-progress" style="--percent: 40;">
-                        <span class="percent-val">40%<br><small>সম্পূর্ণ</small></span>
+                        <span class="percent-val" id="nadiya-percent">0%<br><small>সম্পূর্ণ</small></span>
                     </div>
                     <ul class="stat-list">
-                        <li><span class="dot green"></span> COMPLETE: <strong>24 DAYS</strong></li>
-                        <li><span class="dot yellow"></span> PARTIAL: <strong>3 DAYS</strong></li>
-                        <li><span class="dot red"></span> আংশিক: <strong>0 দিন</strong></li>
-                        <li><span class="dot gray"></span> বাকি: <strong>1 দিন</strong></li>
+                        <li><span class="dot green"></span> COMPLETE: <strong id="nadiya-complete-days">0 DAYS</strong></li>
+                        <li><span class="dot yellow"></span> সম্পূর্ণ ওয়াক্ত: <strong id="nadiya-total-checked">0</strong></li>
                     </ul>
                 </div>
             </div>
         </section>
 
-        <!-- Bottom Quote & AI Widget -->
         <footer class="bottom-bar">
             <div class="quote-box">
                 <i class="fa-solid fa-trophy trophy-icon"></i>
@@ -186,12 +181,15 @@
             "nadiya@gmail.com": "gando"
         };
 
+        const prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
+
         function handleLogin() {
             const email = document.getElementById('email').value.trim();
             const pass = document.getElementById('password').value.trim();
             if (allowedUsers[email] && allowedUsers[email] === pass) {
                 document.getElementById('login-modal').classList.add('hidden');
                 document.getElementById('dashboard').classList.remove('hidden');
+                loadSavedPhotos();
                 generateTableRows();
             } else {
                 alert('ভুল ইমেইল অথবা পাসওয়ার্ড!');
@@ -210,30 +208,78 @@
             }
         }
 
+        function savePrayer(key, isChecked) {
+            localStorage.setItem(key, isChecked);
+            calculateStats();
+        }
+
+        function changePhotos() {
+            const minhajUrl = prompt("মিনহাজের ছবির URL/লিংক দিন:");
+            const nadiyaUrl = prompt("নাদিয়ার ছবির URL/লিংক দিন:");
+            if (minhajUrl) {
+                localStorage.setItem('img_minhaj', minhajUrl);
+                document.getElementById('img-minhaj').src = minhajUrl;
+            }
+            if (nadiyaUrl) {
+                localStorage.setItem('img_nadiya', nadiyaUrl);
+                document.getElementById('img-nadiya').src = nadiyaUrl;
+            }
+        }
+
+        function loadSavedPhotos() {
+            const mImg = localStorage.getItem('img_minhaj');
+            const nImg = localStorage.getItem('img_nadiya');
+            if (mImg) document.getElementById('img-minhaj').src = mImg;
+            if (nImg) document.getElementById('img-nadiya').src = nImg;
+        }
+
         function generateTableRows() {
             const tbody = document.getElementById('prayer-table-body');
             tbody.innerHTML = '';
-            
-            const statuses = ['চমৎকার 🔥', 'ভালো 😬', 'ভালো 😬', 'চমৎকার 🔥', 'মোটামুটি 😬', 'চেষ্টা চালিয়ে যাও 💪', 'বাকি'];
 
-            for (let i = 1; i <= 7; i++) {
-                let row = `<tr>
-                    <td><strong>${i}/30</strong></td>
-                    <td><i class="fa-regular fa-circle-check status-icon green"></i></td>
-                    <td><i class="fa-regular fa-circle-check status-icon green"></i></td>
-                    <td><i class="fa-regular fa-circle-check status-icon green"></i></td>
-                    <td><i class="fa-regular fa-circle-check status-icon green"></i></td>
-                    <td><i class="fa-regular fa-circle-check status-icon green"></i></td>
-                    <td><i class="fa-regular fa-circle-check status-icon green"></i></td>
-                    <td><i class="fa-regular fa-circle-check status-icon green"></i></td>
-                    <td><i class="fa-regular fa-circle-check status-icon green"></i></td>
-                    <td><i class="fa-regular fa-circle-check status-icon green"></i></td>
-                    <td><i class="fa-regular fa-circle-check status-icon green"></i></td>
-                    <td><span class="status-badge">${statuses[i-1] || 'বাকি'}</span></td>
-                </tr>`;
+            for (let day = 1; day <= 30; day++) {
+                let row = `<tr><td><strong>${day}/30</strong></td>`;
+
+                // Minhaj inputs
+                prayers.forEach(p => {
+                    const key = `m_${day}_${p}`;
+                    const checked = localStorage.getItem(key) === 'true' ? 'checked' : '';
+                    row += `<td><input type="checkbox" class="prayer-check" ${checked} onchange="savePrayer('${key}', this.checked)"></td>`;
+                });
+
+                // Nadiya inputs
+                prayers.forEach(p => {
+                    const key = `n_${day}_${p}`;
+                    const checked = localStorage.getItem(key) === 'true' ? 'checked' : '';
+                    row += `<td><input type="checkbox" class="prayer-check" ${checked} onchange="savePrayer('${key}', this.checked)"></td>`;
+                });
+
+                row += `<td><span class="status-badge">চলমান ⏳</span></td></tr>`;
                 tbody.innerHTML += row;
             }
+            calculateStats();
+        }
+
+        function calculateStats() {
+            let mChecked = 0, nChecked = 0;
+            for (let day = 1; day <= 30; day++) {
+                prayers.forEach(p => {
+                    if (localStorage.getItem(`m_${day}_${p}`) === 'true') mChecked++;
+                    if (localStorage.getItem(`n_${day}_${p}`) === 'true') nChecked++;
+                });
+            }
+
+            const mPercent = Math.round((mChecked / 150) * 100);
+            const nPercent = Math.round((nChecked / 150) * 100);
+
+            document.getElementById('minhaj-total-checked').innerText = `${mChecked}/150`;
+            document.getElementById('minhaj-percent').innerHTML = `${mPercent}%<br><small>সম্পূর্ণ</small>`;
+            document.getElementById('minhaj-complete-days').innerText = `${Math.floor(mChecked / 5)} DAYS`;
+
+            document.getElementById('nadiya-total-checked').innerText = `${nChecked}/150`;
+            document.getElementById('nadiya-percent').innerHTML = `${nPercent}%<br><small>সম্পূর্ণ</small>`;
+            document.getElementById('nadiya-complete-days').innerText = `${Math.floor(nChecked / 5)} DAYS`;
         }
     </script>
 </body>
-                                </html>
+</html>
