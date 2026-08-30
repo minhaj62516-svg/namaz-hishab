@@ -3,18 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Namaz Hishab</title>
+    <title>Namaz Hishab | নামাজের হিসাব</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="light-mode">
+
+    <header class="navbar">
+        <div class="logo">
+            <i class="fa-solid fa-kaaba"></i> <span>NAMAZ-HISHAB</span>
+        </div>
+        <div class="nav-controls">
+            <button id="theme-toggle" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i></button>
+            <button id="lang-toggle" onclick="toggleLanguage()">EN / BN</button>
+        </div>
+    </header>
+
     <div id="login-modal" class="modal">
-        <div class="modal-content">
-            <h2>লগইন করুন</h2>
-            <input type="email" id="email" placeholder="ইমেইল এড্রেস">
-            <input type="password" id="password" placeholder="পাসওয়ার্ড">
-            <button onclick="login()">লগইন</button>
+        <div class="login-card">
+            <div class="islamic-banner">
+                <h3>PRAYER IS THE PILLAR OF RELIGION</h3>
+                <p>নামাজ দ্বীনের স্তম্ভ | নামাজ কায়েম করুন</p>
+            </div>
+            <div class="login-form">
+                <h2>লগইন করুন</h2>
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="email" placeholder="ইমেইল এড্রেস">
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" placeholder="পাসওয়ার্ড">
+                </div>
+                <button onclick="handleLogin()" class="login-btn">লগইন</button>
+            </div>
         </div>
     </div>
-    <h1>আমাদের নামাজের হিসাব</h1>
+
+    <main id="dashboard" class="dashboard hidden">
+        <div class="banner-card">
+            <h2>স্বাগতম, <span id="user-display-name">ব্যবহারকারী</span>! 🤲</h2>
+            <p>প্রতিদিনের সালাত সময়মতো আদায় করার চেষ্টা করি</p>
+        </div>
+
+        <div class="profiles-container">
+            <div class="user-card" id="card-minhaj">
+                <img src="minhaj.jpg" alt="Minhaj" class="profile-img" id="img-minhaj">
+                <h3>MINHAJ</h3>
+                <div class="prayer-list" id="minhaj-prayers">
+                    </div>
+            </div>
+
+            <div class="user-card" id="card-nadiya">
+                <img src="nadiya.jpg" alt="Nadiya" class="profile-img" id="img-nadiya">
+                <h3>NADIYA</h3>
+                <div class="prayer-list" id="nadiya-prayers">
+                    </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
 </body>
 </html>
