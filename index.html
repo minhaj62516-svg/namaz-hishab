@@ -7,17 +7,21 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Interactive Checkbox Style */
         .prayer-check {
             width: 18px;
             height: 18px;
             accent-color: #0d9488;
             cursor: pointer;
         }
+        /* ছবি ভালোভাবে ফিট হওয়ার জন্য */
+        .avatar {
+            object-fit: cover;
+        }
     </style>
 </head>
 <body class="light-mode">
 
+    <!-- Login Modal -->
     <div id="login-modal" class="modal-overlay">
         <div class="login-card">
             <div class="login-banner">
@@ -51,7 +55,9 @@
         </div>
     </div>
 
+    <!-- Dashboard Main -->
     <div id="dashboard" class="dashboard-container hidden">
+        <!-- Header Controls -->
         <header class="top-nav">
             <div class="brand">
                 <i class="fa-solid fa-kaaba logo-icon"></i>
@@ -66,7 +72,7 @@
                     <button class="icon-btn" onclick="toggleAdminMenu()"><i class="fa-solid fa-gear"></i></button>
                     <div id="admin-menu" class="dropdown-content hidden">
                         <h4>ADMIN PANEL</h4>
-                        <a href="#" onclick="changePhotos()"><i class="fa-regular fa-image"></i> Change Photos</a>
+                        <a href="#"><i class="fa-regular fa-image"></i> Change Photos</a>
                         <a href="#"><i class="fa-solid fa-sliders"></i> Add Features</a>
                     </div>
                 </div>
@@ -87,9 +93,10 @@
             </div>
         </header>
 
+        <!-- Profiles & Banner Header -->
         <section class="hero-section">
             <div class="profile-card">
-                <img id="img-minhaj" src="https://ui-avatars.com/api/?name=Minhaj&background=0d9488&color=fff&size=128" alt="Minhaj" class="avatar">
+                <img id="img-minhaj" src="minhaj.jpg" alt="Minhaj" class="avatar">
                 <h3>MINHAJ</h3>
             </div>
             <div class="banner-center">
@@ -99,11 +106,12 @@
                 </div>
             </div>
             <div class="profile-card">
-                <img id="img-nadiya" src="https://ui-avatars.com/api/?name=Nadiya&background=e11d48&color=fff&size=128" alt="Nadiya" class="avatar">
+                <img id="img-nadiya" src="nadiya.jpg" alt="Nadiya" class="avatar">
                 <h3>NADIYA</h3>
             </div>
         </section>
 
+        <!-- Main Prayer Table Section -->
         <section class="table-card">
             <div class="table-header-legend">
                 <div class="legend-items">
@@ -130,7 +138,8 @@
                         </tr>
                     </thead>
                     <tbody id="prayer-table-body">
-                        </tbody>
+                        <!-- Dynamic Rows -->
+                    </tbody>
                 </table>
             </div>
             <div class="see-all-container">
@@ -138,6 +147,7 @@
             </div>
         </section>
 
+        <!-- Analytics / Summary Cards -->
         <section class="analytics-section">
             <div class="stat-card">
                 <h4><span class="badge-mini">M</span> MINHAJ'S PRAYER LOG</h4>
@@ -166,6 +176,7 @@
             </div>
         </section>
 
+        <!-- Bottom Quote -->
         <footer class="bottom-bar">
             <div class="quote-box">
                 <i class="fa-solid fa-trophy trophy-icon"></i>
@@ -189,7 +200,6 @@
             if (allowedUsers[email] && allowedUsers[email] === pass) {
                 document.getElementById('login-modal').classList.add('hidden');
                 document.getElementById('dashboard').classList.remove('hidden');
-                loadSavedPhotos();
                 generateTableRows();
             } else {
                 alert('ভুল ইমেইল অথবা পাসওয়ার্ড!');
@@ -211,26 +221,6 @@
         function savePrayer(key, isChecked) {
             localStorage.setItem(key, isChecked);
             calculateStats();
-        }
-
-        function changePhotos() {
-            const minhajUrl = prompt("মিনহাজের ছবির URL/লিংক দিন:");
-            const nadiyaUrl = prompt("নাদিয়ার ছবির URL/লিংক দিন:");
-            if (minhajUrl) {
-                localStorage.setItem('img_minhaj', minhajUrl);
-                document.getElementById('img-minhaj').src = minhajUrl;
-            }
-            if (nadiyaUrl) {
-                localStorage.setItem('img_nadiya', nadiyaUrl);
-                document.getElementById('img-nadiya').src = nadiyaUrl;
-            }
-        }
-
-        function loadSavedPhotos() {
-            const mImg = localStorage.getItem('img_minhaj');
-            const nImg = localStorage.getItem('img_nadiya');
-            if (mImg) document.getElementById('img-minhaj').src = mImg;
-            if (nImg) document.getElementById('img-nadiya').src = nImg;
         }
 
         function generateTableRows() {
@@ -282,4 +272,4 @@
         }
     </script>
 </body>
-</html>
+                </html>
