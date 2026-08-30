@@ -160,6 +160,24 @@
         </footer>
     </div>
 
+    <!-- Gando AI Widget Button & Chat Window -->
+    <div id="ai-widget">
+        <button id="ai-toggle-btn" onclick="toggleAIChat()"><i class="fa-solid fa-robot"></i> Gando AI</button>
+        <div id="ai-chat-box" class="hidden">
+            <div class="ai-header">
+                <span>🤖 Gando AI</span>
+                <button onclick="toggleAIChat()">✕</button>
+            </div>
+            <div id="ai-messages" class="ai-body">
+                <div class="ai-msg bot">আসসালামু আলাইকুম! আমি Gando AI। আমি কীভাবে আপনাকে সাহায্য করতে পারি?</div>
+            </div>
+            <div class="ai-footer">
+                <input type="text" id="ai-input" placeholder="এখানে লিখুন..." onkeypress="handleAIKeyPress(event)">
+                <button onclick="sendAIMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
     <script>
         function handleLogin() {
@@ -178,4 +196,4 @@
         }
     </script>
 </body>
-                                </html>
+                </html>
