@@ -1,3 +1,9 @@
+// ইউজার ক্রেডেনশিয়ালস (আপডেট করা ইমেইল)
+const USERS = {
+    minhaj: { email: "minhaj@gmail.com", pass: "123456" },
+    nadiya: { email: "nadiya@gmail.com", pass: "123456" }
+};
+
 // ভাষা রূপান্তরের ডিকশনারি
 const translations = {
     bn: {
@@ -192,7 +198,6 @@ function setLanguage(lang) {
 
     localStorage.setItem('namaz_lang', lang);
 
-    // সকল ডাটা-কি টেক্সট আপডেট
     document.querySelectorAll('[data-key]').forEach(elem => {
         const key = elem.getAttribute('data-key');
         if (translations[lang] && translations[lang][key]) {
@@ -229,7 +234,6 @@ function sendAIMessage() {
 
     if (!text) return;
 
-    // User message
     const userDiv = document.createElement('div');
     userDiv.className = 'ai-msg user';
     userDiv.innerText = text;
@@ -238,7 +242,6 @@ function sendAIMessage() {
     input.value = '';
     msgContainer.scrollTop = msgContainer.scrollHeight;
 
-    // Bot Auto Reply (Gando AI Logic)
     setTimeout(() => {
         const botDiv = document.createElement('div');
         botDiv.className = 'ai-msg bot';
