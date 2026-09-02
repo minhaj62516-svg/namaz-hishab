@@ -1,18 +1,20 @@
-// অনলাইন ক্লাউড স্টোরেজ সেটআপ (Direct Cloud Sync)
-const BIN_ID = '673a11b6ad19ca34f8cc8564';
-const API_KEY = '$2a$10$89M2mHjM25WlCjK5qS0Mbe9/368q2rK8iA/zF.r0C/Xn2JzI6b7.i';
-const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+// আপনার লাইভ ফায়ারবেস লিংক কনফিগারেশন
+const firebaseConfig = {
+    databaseURL: "https://namaz-challenge-be92d-default-rtdb.firebaseio.com/"
+};
 
-// ইউজার ক্রেডেনশিয়ালস
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const database = firebase.database();
+
 const USERS = [
     { email: "minhaj@gmail.com", pass: "gando" },
     { email: "nadiya@gmail.com", pass: "gando" }
 ];
 
 let globalSavedData = {};
-let syncInterval = null;
 
-// লগইন চেক ফাংশন
 function handleLogin() {
     const emailInput = document.getElementById('email').value.trim().toLowerCase();
     const passInput = document.getElementById('password').value.trim();
@@ -26,11 +28,7 @@ function handleLogin() {
         document.getElementById('dashboard').style.display = 'block';
         document.body.classList.remove('login-mode');
         
-        fetchDataFromCloud();
-        // প্রতি ৩ সেকেন্ড পর পর অনলাইন থেকে ডাটা রিফ্রেশ হবে (দুটি ফোনেই অটোমেটিক দেখানোর জন্য)
-        if (!syncInterval) {
-            syncInterval = setInterval(fetchDataFromCloud, 3000);
-        }
+        listenToRealtimeData();
         initTheme();
         initLanguage();
     } else {
@@ -40,8 +38,6 @@ function handleLogin() {
 }
 
 function handleLogout() {
-    if (syncInterval) clearInterval(syncInterval);
-    syncInterval = null;
     document.getElementById('email').value = '';
     document.getElementById('password').value = '';
     document.getElementById('login-modal').style.display = 'flex';
@@ -49,41 +45,14 @@ function handleLogout() {
     document.body.classList.add('login-mode');
 }
 
-// ক্লাউড থেকে ডাটা নিয়ে আসা
-async function fetchDataFromCloud() {
-    try {
-        const res = await fetch(API_URL, {
-            headers: {
-                'X-Master-Key': API_KEY
-            }
-        });
-        if (res.ok) {
-            const result = await res.json();
-            globalSavedData = result.record || {};
-            renderTable();
-        }
-    } catch (e) {
-        console.error("Cloud Fetch Error:", e);
-    }
+// ফায়ারবেস থেকে রিয়েল-টাইম লাইভ ডাটা শোনা
+function listenToRealtimeData() {
+    database.ref('namaz_tracker').on('value', (snapshot) => {
+        globalSavedData = snapshot.val() || {};
+        renderTable();
+    });
 }
 
-// ক্লাউডে ডাটা সেভ করা
-async function saveDataToCloud() {
-    try {
-        await fetch(API_URL, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Master-Key': API_KEY
-            },
-            body: JSON.stringify(globalSavedData)
-        });
-    } catch (e) {
-        console.error("Cloud Save Error:", e);
-    }
-}
-
-// ভাষা রূপান্তরের ডিকশনারি
 const translations = {
     bn: {
         login_title: "লগইন",
@@ -145,7 +114,6 @@ const translations = {
     }
 };
 
-// টেবিল রেন্ডার
 function renderTable() {
     const tbody = document.getElementById('tracker-table-body');
     if (!tbody) return;
@@ -172,18 +140,15 @@ function renderTable() {
     updateAnalytics();
 }
 
-// টিকচিহ্ন আপডেট
+// ফায়ারবেসে ডাটা সরাসরি সেভ করা
 function saveCheckboxState(checkbox) {
     const key = checkbox.getAttribute('data-key');
     
     if (checkbox.checked) {
-        globalSavedData[key] = true;
+        database.ref('namaz_tracker/' + key).set(true);
     } else {
-        delete globalSavedData[key];
+        database.ref('namaz_tracker/' + key).remove();
     }
-    
-    updateAnalytics();
-    saveDataToCloud();
 }
 
 function updateAnalytics() {
@@ -237,7 +202,6 @@ function updateAnalytics() {
     }
 }
 
-// Theme Switcher
 function setTheme(mode) {
     const btnLight = document.getElementById('btn-theme-light');
     const btnDark = document.getElementById('btn-theme-dark');
@@ -260,7 +224,6 @@ function initTheme() {
     setTheme(savedTheme);
 }
 
-// Language Switcher
 function setLanguage(lang) {
     const btnBn = document.getElementById('btn-lang-bn');
     const btnEn = document.getElementById('btn-lang-en');
@@ -388,4 +351,4 @@ function getSmartAIReply(query) {
         "আমি একটি স্মার্ট ট্র্যাকিং AI। যেকোনো বিষয় আমাকে বলতে পারেন!"
     ];
     return randomReplies[Math.floor(Math.random() * randomReplies.length)];
-                }
+        }
