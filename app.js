@@ -1,21 +1,16 @@
-// Firebase Configuration (লাইভ সিঙ্কের জন্য)
-const firebaseConfig = {
-    databaseURL: "https://namaz-hishab-default-rtdb.firebaseio.com/"
-};
+// অনলাইন ক্লাউড স্টোরেজ সেটআপ (Direct Cloud Sync)
+const BIN_ID = '673a11b6ad19ca34f8cc8564';
+const API_KEY = '$2a$10$89M2mHjM25WlCjK5qS0Mbe9/368q2rK8iA/zF.r0C/Xn2JzI6b7.i';
+const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
-// Initialize Firebase
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-const database = firebase.database();
-
-// ইউজার ক্রেডেনশিয়ালস (পাসওয়ার্ড: gando)
+// ইউজার ক্রেডেনশিয়ালস
 const USERS = [
     { email: "minhaj@gmail.com", pass: "gando" },
     { email: "nadiya@gmail.com", pass: "gando" }
 ];
 
 let globalSavedData = {};
+let syncInterval = null;
 
 // লগইন চেক ফাংশন
 function handleLogin() {
@@ -31,7 +26,11 @@ function handleLogin() {
         document.getElementById('dashboard').style.display = 'block';
         document.body.classList.remove('login-mode');
         
-        listenToRealtimeData();
+        fetchDataFromCloud();
+        // প্রতি ৩ সেকেন্ড পর পর অনলাইন থেকে ডাটা রিফ্রেশ হবে (দুটি ফোনেই অটোমেটিক দেখানোর জন্য)
+        if (!syncInterval) {
+            syncInterval = setInterval(fetchDataFromCloud, 3000);
+        }
         initTheme();
         initLanguage();
     } else {
@@ -41,6 +40,8 @@ function handleLogin() {
 }
 
 function handleLogout() {
+    if (syncInterval) clearInterval(syncInterval);
+    syncInterval = null;
     document.getElementById('email').value = '';
     document.getElementById('password').value = '';
     document.getElementById('login-modal').style.display = 'flex';
@@ -48,12 +49,38 @@ function handleLogout() {
     document.body.classList.add('login-mode');
 }
 
-// অনলাইন থেকে লাইভ ডাটা রিড করা
-function listenToRealtimeData() {
-    database.ref('namaz_tracker').on('value', (snapshot) => {
-        globalSavedData = snapshot.val() || {};
-        renderTable();
-    });
+// ক্লাউড থেকে ডাটা নিয়ে আসা
+async function fetchDataFromCloud() {
+    try {
+        const res = await fetch(API_URL, {
+            headers: {
+                'X-Master-Key': API_KEY
+            }
+        });
+        if (res.ok) {
+            const result = await res.json();
+            globalSavedData = result.record || {};
+            renderTable();
+        }
+    } catch (e) {
+        console.error("Cloud Fetch Error:", e);
+    }
+}
+
+// ক্লাউডে ডাটা সেভ করা
+async function saveDataToCloud() {
+    try {
+        await fetch(API_URL, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': API_KEY
+            },
+            body: JSON.stringify(globalSavedData)
+        });
+    } catch (e) {
+        console.error("Cloud Save Error:", e);
+    }
 }
 
 // ভাষা রূপান্তরের ডিকশনারি
@@ -101,7 +128,7 @@ const translations = {
         leg_complete: "✔ Complete",
         leg_partial: "◐ Partial",
         leg_remaining: "◯ Left",
-        leg_missed: "✖ Missed",
+        leg_missed: "Missed",
         btn_filter: "Filter",
         th_day: "Day",
         th_status: "Day Status",
@@ -118,7 +145,7 @@ const translations = {
     }
 };
 
-// ১ থেকে ৩০ দিনের টেবিল তৈরি
+// টেবিল রেন্ডার
 function renderTable() {
     const tbody = document.getElementById('tracker-table-body');
     if (!tbody) return;
@@ -145,15 +172,18 @@ function renderTable() {
     updateAnalytics();
 }
 
-// টিকচিহ্ন দিলে ডাটাবেসে সেভ হবে
+// টিকচিহ্ন আপডেট
 function saveCheckboxState(checkbox) {
     const key = checkbox.getAttribute('data-key');
     
     if (checkbox.checked) {
-        database.ref('namaz_tracker/' + key).set(true);
+        globalSavedData[key] = true;
     } else {
-        database.ref('namaz_tracker/' + key).remove();
+        delete globalSavedData[key];
     }
+    
+    updateAnalytics();
+    saveDataToCloud();
 }
 
 function updateAnalytics() {
@@ -207,7 +237,7 @@ function updateAnalytics() {
     }
 }
 
-// Theme Switcher Functions
+// Theme Switcher
 function setTheme(mode) {
     const btnLight = document.getElementById('btn-theme-light');
     const btnDark = document.getElementById('btn-theme-dark');
@@ -230,7 +260,7 @@ function initTheme() {
     setTheme(savedTheme);
 }
 
-// Language Switcher Functions
+// Language Switcher
 function setLanguage(lang) {
     const btnBn = document.getElementById('btn-lang-bn');
     const btnEn = document.getElementById('btn-lang-en');
@@ -358,4 +388,4 @@ function getSmartAIReply(query) {
         "আমি একটি স্মার্ট ট্র্যাকিং AI। যেকোনো বিষয় আমাকে বলতে পারেন!"
     ];
     return randomReplies[Math.floor(Math.random() * randomReplies.length)];
-        }
+                }
