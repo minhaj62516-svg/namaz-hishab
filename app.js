@@ -1,8 +1,21 @@
+// Firebase Configuration (লাইভ সিঙ্কের জন্য)
+const firebaseConfig = {
+    databaseURL: "https://namaz-hishab-default-rtdb.firebaseio.com/"
+};
+
+// Initialize Firebase
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const database = firebase.database();
+
 // ইউজার ক্রেডেনশিয়ালস (পাসওয়ার্ড: gando)
 const USERS = [
     { email: "minhaj@gmail.com", pass: "gando" },
     { email: "nadiya@gmail.com", pass: "gando" }
 ];
+
+let globalSavedData = {};
 
 // লগইন চেক ফাংশন
 function handleLogin() {
@@ -10,7 +23,6 @@ function handleLogin() {
     const passInput = document.getElementById('password').value.trim();
     const errorMsg = document.getElementById('login-error');
 
-    // চেক করা হচ্ছে ইমেইল ও পাসওয়ার্ড সঠিক কি না
     const isValidUser = USERS.some(user => user.email === emailInput && user.pass === passInput);
 
     if (isValidUser) {
@@ -19,7 +31,7 @@ function handleLogin() {
         document.getElementById('dashboard').style.display = 'block';
         document.body.classList.remove('login-mode');
         
-        renderTable();
+        listenToRealtimeData();
         initTheme();
         initLanguage();
     } else {
@@ -34,6 +46,14 @@ function handleLogout() {
     document.getElementById('login-modal').style.display = 'flex';
     document.getElementById('dashboard').style.display = 'none';
     document.body.classList.add('login-mode');
+}
+
+// অনলাইন থেকে লাইভ ডাটা রিড করা
+function listenToRealtimeData() {
+    database.ref('namaz_tracker').on('value', (snapshot) => {
+        globalSavedData = snapshot.val() || {};
+        renderTable();
+    });
 }
 
 // ভাষা রূপান্তরের ডিকশনারি
@@ -98,12 +118,11 @@ const translations = {
     }
 };
 
-// ১ থেকে ৩০ দিনের টেবিল তৈরি ও ডাটা সেভ
+// ১ থেকে ৩০ দিনের টেবিল তৈরি
 function renderTable() {
     const tbody = document.getElementById('tracker-table-body');
     if (!tbody) return;
     
-    const savedData = JSON.parse(localStorage.getItem('namaz_tracker_data')) || {};
     const currentLang = localStorage.getItem('namaz_lang') || 'bn';
     const ongoingText = translations[currentLang].status_ongoing;
     
@@ -114,7 +133,7 @@ function renderTable() {
         
         for (let waqt = 1; waqt <= 10; waqt++) {
             const key = `day_${day}_waqt_${waqt}`;
-            const isChecked = savedData[key] ? 'checked' : '';
+            const isChecked = globalSavedData[key] ? 'checked' : '';
             html += `<td><input type="checkbox" data-key="${key}" data-day="${day}" data-waqt="${waqt}" ${isChecked} onchange="saveCheckboxState(this)"></td>`;
         }
         
@@ -126,22 +145,18 @@ function renderTable() {
     updateAnalytics();
 }
 
+// টিকচিহ্ন দিলে ডাটাবেসে সেভ হবে
 function saveCheckboxState(checkbox) {
     const key = checkbox.getAttribute('data-key');
-    const savedData = JSON.parse(localStorage.getItem('namaz_tracker_data')) || {};
     
     if (checkbox.checked) {
-        savedData[key] = true;
+        database.ref('namaz_tracker/' + key).set(true);
     } else {
-        delete savedData[key];
+        database.ref('namaz_tracker/' + key).remove();
     }
-    
-    localStorage.setItem('namaz_tracker_data', JSON.stringify(savedData));
-    updateAnalytics();
 }
 
 function updateAnalytics() {
-    const savedData = JSON.parse(localStorage.getItem('namaz_tracker_data')) || {};
     const currentLang = localStorage.getItem('namaz_lang') || 'bn';
     const waqtLbl = translations[currentLang].waqt_count_lbl;
     
@@ -155,7 +170,7 @@ function updateAnalytics() {
         let nDayCount = 0;
 
         for (let w = 1; w <= 5; w++) {
-            if (savedData[`day_${day}_waqt_${w}`]) {
+            if (globalSavedData[`day_${day}_waqt_${w}`]) {
                 minhajWaqtCount++;
                 mDayCount++;
             }
@@ -163,7 +178,7 @@ function updateAnalytics() {
         if (mDayCount === 5) minhajFullDays++;
 
         for (let w = 6; w <= 10; w++) {
-            if (savedData[`day_${day}_waqt_${w}`]) {
+            if (globalSavedData[`day_${day}_waqt_${w}`]) {
                 nadiyaWaqtCount++;
                 nDayCount++;
             }
@@ -245,7 +260,7 @@ function initLanguage() {
     setLanguage(savedLang);
 }
 
-// Gando AI Functions (Advanced Smart Conversational Engine)
+// Gando AI Functions
 function toggleAIChat() {
     const chatBox = document.getElementById('ai-chat-box');
     if (chatBox) {
@@ -309,13 +324,6 @@ function getSmartAIReply(query) {
         return "আপনাকেও অনেক ধন্যবাদ! সবসময় আপনার পাশে আছি। ❤️";
     }
 
-    if (q.includes('কাজ') || q.includes('হেল্প') || q.includes('help') || q.includes('কী করতে পারো') || q.includes('কি করতে পারো')) {
-        return "আমি আপনাকে যেকোনো বিষয়ে তথ্য দিতে পারি! যেমন: নামাজের সময় ও দিকনির্দেশনা, গাণিতিক হিসাব, দিন/তারিখ, মোটিভেশন এবং মিনহাজ ও নাদিয়ার নামাজের ট্র্যাকিং স্টেটাস চেক করতে পারি।";
-    }
-    if (q.includes('ঠিক আছে') || q.includes('ওকে') || q.includes('ok') || q.includes('accha') || q.includes('আচ্ছা')) {
-        return "জি! আর কোনো সাহায্য লাগলে নিঃসংকোচে আমাকে লিখে জানান।";
-    }
-
     if (q.includes('সময়') || q.includes('টাইম') || q.includes('time')) {
         const now = new Date();
         return `এখন সময়: ${now.toLocaleTimeString('bn-BD')}`;
@@ -326,59 +334,28 @@ function getSmartAIReply(query) {
     }
 
     if (q.includes('মিনহাজ') || q.includes('minhaj')) {
-        const savedData = JSON.parse(localStorage.getItem('namaz_tracker_data')) || {};
         let count = 0;
         for (let d = 1; d <= 30; d++) {
             for (let w = 1; w <= 5; w++) {
-                if (savedData[`day_${d}_waqt_${w}`]) count++;
+                if (globalSavedData[`day_${d}_waqt_${w}`]) count++;
             }
         }
         return `মিনহাজ এ পর্যন্ত মোট ${count}/১৫০ টি ওয়াক্ত নামাজ সম্পন্ন করেছেন। মাশাআল্লাহ!`;
     }
     if (q.includes('নাদিয়া') || q.includes('নাদিয়া') || q.includes('nadiya')) {
-        const savedData = JSON.parse(localStorage.getItem('namaz_tracker_data')) || {};
         let count = 0;
         for (let d = 1; d <= 30; d++) {
             for (let w = 6; w <= 10; w++) {
-                if (savedData[`day_${d}_waqt_${w}`]) count++;
+                if (globalSavedData[`day_${d}_waqt_${w}`]) count++;
             }
         }
         return `নাদিয়া এ পর্যন্ত মোট ${count}/১৫০ টি ওয়াক্ত নামাজ সম্পন্ন করেছেন। আল্লাহ কবুল করুন!`;
     }
 
-    if (q.includes('ফজর') || q.includes('fajr')) {
-        return "ফজরের নামাজ ২ রাকাত সুন্নাত ও ২ রাকাত ফরজ। রাসুল (সাঃ) বলেছেন: 'ফজরের দু’রাকাত সুন্নাত দুনিয়া ও তার মধ্যকার সমস্ত কিছুর চেয়ে উত্তম।'";
-    }
-    if (q.includes('জোহর') || q.includes('dhuhr')) {
-        return "জোহরের নামাজ: ৪ রাকাত সুন্নাত, ৪ রাকাত ফরজ, ২ রাকাত সুন্নাত ও ২ রাকাত নফল।";
-    }
-    if (q.includes('আসর') || q.includes('asr')) {
-        return "আসরের নামাজ: ৪ রাকাত সুন্নাত (গাইরে মুয়াক্কাদাহ) এবং ৪ রাকাত ফরজ।";
-    }
-    if (q.includes('মাগরিব') || q.includes('maghrib')) {
-        return "মাগরিবের নামাজ: ৩ রাকাত ফরজ, ২ রাকাত সুন্নাত ও ২ রাকাত নফল।";
-    }
-    if (q.includes('ইশা') || q.includes('isha')) {
-        return "ইশার নামাজ: ৪ রাকাত সুন্নাত, ৪ রাকাত ফরজ, ২ রাকাত সুন্নাত, ২ রাকাত নফল, ৩ রাকাত বিতর ও ২ রাকাত নফল।";
-    }
-    if (q.includes('নামাজ') || q.includes('ওয়াক্ত') || q.includes('সালাত') || q.includes('dua') || q.includes('দোয়া')) {
-        const islamicQuotes = [
-            "নিয়মিত ৫ ওয়াক্ত নামাজ আদায় করুন। নামাজ হলো জান্নাতের চাবিকাঠি।",
-            "নিশ্চয়ই সালাত মানুষকে অশ্লীল ও মন্দ কাজ থেকে বিরত রাখে। (সূরা আনকাবুত: ৪৫)",
-            "যে ব্যক্তি সময়মতো নামাজ আদায় করে, আল্লাহ তাকে বিশেষ শান্তিতে রাখেন।"
-        ];
-        return islamicQuotes[Math.floor(Math.random() * islamicQuotes.length)];
-    }
-
-    if (q.includes('কষ্ট') || q.includes('মন খারাপ') || q.includes('দুঃখ') || q.includes('হতাশ') || q.includes('মোটিভেশন')) {
-        return "ধৈর্য ধরুন! নিশ্চয়ই কষ্টের সাথেই স্বস্তি রয়েছে। (সূরা আল-ইনশিরাহ: ৫)। সব সময় আল্লাহর ওপর ভরসা রাখুন, সব ঠিক হয়ে যাবে ইনশাআল্লাহ। ❤️";
-    }
-
     const randomReplies = [
         "আমি বিষয়টি বুঝতে পেরেছি! আর কীভাবে সাহায্য করতে পারি বলুন?",
-        "জি, আপনার প্রশ্নটির জন্য ধন্যবাদ! আমি চেষ্টা করছি আপনাকে সেরা তথ্যটি দিতে।",
-        "আমি একটি স্মার্ট ট্র্যাকিং AI। যেকোনো হিসাব, সময় বা ইসলামিক নির্দেশনার জন্য আমাকে বলতে পারেন!",
-        "আমি আপনার প্রতিটি কথা মন দিয়ে শুনছি। বলুন, পরে কী কাজ করবো?"
+        "জি, আপনার প্রশ্নটির জন্য ধন্যবাদ!",
+        "আমি একটি স্মার্ট ট্র্যাকিং AI। যেকোনো বিষয় আমাকে বলতে পারেন!"
     ];
     return randomReplies[Math.floor(Math.random() * randomReplies.length)];
-}
+        }
